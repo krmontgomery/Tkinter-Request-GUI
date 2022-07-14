@@ -1,8 +1,7 @@
-from datetime import datetime
+from datetime import datetime, date
 import sqlite3
 from tkinter import *
 from tkinter import messagebox
-from datetime import date
 import os
 import pandas as pd
 
@@ -16,6 +15,9 @@ root.columnconfigure(0,weight=1) # column weight 100%
 # root.rowconfigure(3, weight=1)
 app_menubar = Menu(root)
 root.config(menu=app_menubar)
+
+current_time = datetime.now()
+formatted_Time = current_time.strftime("%d-%m-%Y %H.%M")
 
 def restart_command():
     root.destroy()
@@ -56,13 +58,18 @@ def search_records():
     search_table.grid(row=0, pady=10)
 
 def create_csvfile():
+    #Connect to DB
     conn = sqlite3.connect('request.db')
-    #Create Cursor
-    today = date.today()
-    todays_date = today.strftime("%b-%d-%Y")
     #Pandas to create CSV file
     df = pd.read_sql_query('Select * from request_entry', conn)
-    df.to_csv(f'./Reports/{todays_date}.csv')
+    #Handle Reports Folder and file name
+    csv_filename = f'{formatted_Time}.csv'
+    report_dir = './Reports'
+    if not os.path.exists(report_dir):
+        os.mkdir(report_dir)
+    fullname = os.path.join(report_dir, csv_filename)
+    #Create CSV
+    df.to_csv(fullname)
     #Commit Changes
     conn.commit()
     #Close connection
@@ -129,7 +136,6 @@ def doesTableExist():
             caller text,
             email text,
             phone integer,
-            filename text,
             description text,
             entered_timestamp text
             );""")
@@ -144,10 +150,11 @@ def doesTableExist():
 
 def insertIntoTable():
 
-    if Caller_T.get() == '' or Email_T.get() == '' or Phone_T.get() == '' or Filename_T.get() == '' or Description_T.get('1.0', END) == '':
+    if Caller_T.get() == '' or Email_T.get() == '' or Phone_T.get() == '' or Description_T.get('1.0', END) == '':
         messagebox.showinfo('Message', 'You have not filled in all fields.')
     else:
-        current_time = datetime.datetime.now()
+        # current_time = datetime.now()
+        # formatted_Time = current_time.strftime("%d/%m/%Y %H:%M:%S")
         #Create DB/Connect to DB
         conn = sqlite3.connect('request.db')
         #Create Cursor
@@ -160,11 +167,10 @@ def insertIntoTable():
                     caller,
                     email,
                     phone,
-                    filename,
                     description,
                     entered_timestamp)
                 VALUES (:Service_OM, :Urgency_OM, :State_OM,
-                        :Caller_T, :Email_T, :Phone_T, :Filename_T,
+                        :Caller_T, :Email_T, :Phone_T,
                         :Description_T, :current_time) """,
                         {
                             'Service_OM': Service_OM['text'],
@@ -173,22 +179,31 @@ def insertIntoTable():
                             'Caller_T': Caller_T.get(),
                             'Email_T': Email_T.get(),
                             'Phone_T': Phone_T.get(),
-                            'Filename_T': Filename_T.get(),
                             'Description_T':Description_T.get('1.0', END),
-                            'current_time': current_time
+                            'current_time': formatted_Time
                         })
         #Commit Changes
         conn.commit()
         #Close connection
         conn.close()
-
-        messagebox.showinfo('Message', "Entry was successful, fields have been cleared.")
+        report_dir = './Request_Documentation'
+        if not os.path.exists(report_dir):
+            os.mkdir(report_dir)
+            caller_name = Caller_T.get().replace(' ', '-')
+            request_foldername = caller_name + ' ' + formatted_Time
+            parent_sub = os.path.join(report_dir, request_foldername)
+            os.mkdir(parent_sub)
+        else:
+            caller_name = Caller_T.get().replace('#%&}{/\?<>*!@$":+`|=', '-')
+            request_foldername = caller_name + ' ' + formatted_Time
+            parent_sub = os.path.join(report_dir, request_foldername)
+            os.mkdir(parent_sub)
+        messagebox.showinfo('Message', "Entry was successful, fields will be cleared.")
         #Clear fields
         Caller_T.delete(0, END)
         Email_T.delete(0, END)
         Phone_T.delete(0, END)
-        Filename_T.delete(0, END)
-        Description_T.delete(0, END)
+        Description_T.delete('1.0', END)
 
 def select_all_records():
     #Create DB/Connect to DB
@@ -210,7 +225,7 @@ frame_top.columnconfigure(2, weight=1)
 frame_top.columnconfigure(3, weight=1)
 #Service
 Service_L = Label(frame_top, text='City Service:')
-Service_L.grid(row=0, column=1,pady=10)
+Service_L.grid(row=0, column=0,pady=10, sticky='E')
 options = [
     ' Water',
     ' Sewer',
@@ -223,17 +238,13 @@ Service_OM = OptionMenu(frame_top, clicked, *options)
 Service_OM.grid(
     row=0, 
     column=1,
-    columnspan=1+2,
-    pady=10
+    pady=10,
+    padx=15,
+    sticky='W'
     )
-#Frame Mid----------------------------------------------------
-frame_mid_one.columnconfigure(0,weight=1)
-frame_mid_one.columnconfigure(1,weight=1)
-frame_mid_one.columnconfigure(2,weight=1)
-frame_mid_one.columnconfigure(3,weight=1)
 #Task
-Urgency_L = Label(frame_mid_one,text="Urgency:", padx=15)
-Urgency_L.grid(row=1,column=0)
+Urgency_L = Label(frame_top,text="Urgency:")
+Urgency_L.grid(row=0,column=2, sticky='E')
 urgency_options = [
     ' Low',
     ' Medium',
@@ -242,15 +253,21 @@ urgency_options = [
 ]
 clicked = StringVar()
 clicked.set(urgency_options[0])
-Urgency_OM = OptionMenu(frame_mid_one, clicked, *urgency_options)
+Urgency_OM = OptionMenu(frame_top, clicked, *urgency_options)
 Urgency_OM.grid( 
-    row=1,
-    column=1,
-    pady=10
+    row=0,
+    column=3,
+    pady=10,
+    sticky='W'
     )
+#Frame Mid One----------------------------------------------------
+frame_mid_one.columnconfigure(0,weight=1)
+frame_mid_one.columnconfigure(1,weight=3)
+frame_mid_one.columnconfigure(2,weight=3)
+frame_mid_one.columnconfigure(3,weight=1)
 #State/Priority
-State_L = Label(frame_mid_one,text="State:", padx=15)
-State_L.grid(row=1,column=2)
+State_L = Label(frame_mid_one,text="State:")
+State_L.grid(row=1,column=0, sticky='E')
 state_options = [
     ' New',
     ' In-Progress',
@@ -262,39 +279,35 @@ clicked.set(state_options[0])
 State_OM = OptionMenu(frame_mid_one, clicked, *state_options)
 State_OM.grid( 
     row=1,
-    column=3,
-    pady=10
+    column=1,
+    pady=10,
+    sticky='WE'
     )
+#Caller
+Caller_L = Label(frame_mid_one,text='Caller:')
+Caller_L.grid(row=1,column=2, sticky="WE")
+Caller_T = Entry(frame_mid_one, width=25)
+Caller_T.grid(row=1,column=3, sticky="W")
 #Frame Mid Two----------------------------------------------------
 frame_mid_two.columnconfigure(0,weight=1)
 frame_mid_two.columnconfigure(1,weight=1)
 frame_mid_two.columnconfigure(2,weight=1)
 frame_mid_two.columnconfigure(3,weight=1)
-#Caller
-Caller_L = Label(frame_mid_two,text='Caller:', padx=15)
-Caller_L.grid(row=2,column=0)
-Caller_T = Entry(frame_mid_two, width=25)
-Caller_T.grid(row=2,column=1)
 #Email
-Email_L = Label(frame_mid_two,text='Email:', padx=15)
-Email_L.grid(row=2,column=2)
+Email_L = Label(frame_mid_two,text='Email:')
+Email_L.grid(row=2,column=0, sticky="E")
 Email_T = Entry(frame_mid_two, width=25)
-Email_T.grid(row=2,column=3)
+Email_T.grid(row=2,column=1, sticky="W")
 #Frame Mid Three -------------------------------------------------
 frame_mid_three.columnconfigure(0,weight=1)
 frame_mid_three.columnconfigure(1,weight=1)
 frame_mid_three.columnconfigure(2,weight=1)
 frame_mid_three.columnconfigure(3,weight=1)
 #Phone Number
-Phone_L = Label(frame_mid_three,text='Phone:', padx=15)
-Phone_L.grid(row=3,column=0, pady=10)
-Phone_T = Entry(frame_mid_three, width=25)
-Phone_T.grid(row=3,column=1, pady=10)
-#Short Filename
-Filename_L = Label(frame_mid_three,text='Filename:', padx=15)
-Filename_L.grid(row=3,column=2, pady=10)
-Filename_T = Entry(frame_mid_three, width=25)
-Filename_T.grid(row=3,column=3, pady=10)
+Phone_L = Label(frame_mid_two,text='Phone:')
+Phone_L.grid(row=2,column=2, pady=10, sticky="W")
+Phone_T = Entry(frame_mid_two, width=25)
+Phone_T.grid(row=2,column=3, pady=10, sticky='W')
 #Frame Bottom -------------------------------------------------
 frame_bottom.columnconfigure(0,weight=1)
 frame_bottom.columnconfigure(1,weight=1)
