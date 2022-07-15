@@ -57,6 +57,148 @@ def search_records():
     search_table = Button(newWindow, text='Search', command=select_all_records)
     search_table.grid(row=0, pady=10)
 
+def delete_record():
+    pass
+
+def initialize_update():
+    updateWindow = Toplevel(root)
+    updateWindow.title('Update Record')
+    updateWindow.geometry('500x550')
+    updateWindow.columnconfigure(0, weight=1)
+    #Frames
+    frame_top = Frame(updateWindow,)
+    frame_mid_one = Frame(updateWindow,)
+    frame_mid_two = Frame(updateWindow,)
+    frame_mid_three = Frame(updateWindow,)
+    frame_bottom = Frame(updateWindow,)
+    frame_bottom_two = Frame(updateWindow,)
+    frame_bottom_three = Frame(updateWindow,)
+    #Frame Grid
+    frame_top.grid(row=0, column=0, sticky='WENS')
+    frame_mid_one.grid(row=1, column=0, sticky='WENS')
+    frame_mid_two.grid(row=2, column=0, sticky='WENS')
+    frame_mid_three.grid(row=3, column=0, sticky='WENS')
+    frame_bottom.grid(row=4, column=0, sticky='WENS')
+    frame_bottom_two.grid(row=5, column=0, sticky='WENS')
+    frame_bottom_three.grid(row=6, column=0, sticky='WENS')
+    #Frame Top 
+    frame_top.columnconfigure(0, weight=1)
+    frame_top.columnconfigure(1, weight=1)
+    frame_top.columnconfigure(2, weight=1)
+    frame_top.columnconfigure(3, weight=1)
+    #Service
+    Service_L = Label(frame_top, text='Service:')
+    Service_L.grid(row=0, column=0,pady=10, sticky='E')
+    options = [
+        ' EMS',
+        ' Fire',
+        ' Administration',
+        ' Finance',
+        ' City Water',
+        ' Sewer',
+        ' Trash',
+        ' Citizen Inquiry',
+    ]
+    clicked = StringVar()
+    clicked.set(options[0])
+    Service_OM = OptionMenu(frame_top, clicked, *options)
+    Service_OM.grid(
+        row=0, 
+        column=1,
+        pady=10,
+        padx=15,
+        sticky='W'
+        )
+    #Task
+    Urgency_L = Label(frame_top,text="Urgency:")
+    Urgency_L.grid(row=0,column=2, sticky='E')
+    urgency_options = [
+        ' Low',
+        ' Medium',
+        ' High',
+        ' Emergency',
+    ]
+    clicked = StringVar()
+    clicked.set(urgency_options[0])
+    Urgency_OM = OptionMenu(frame_top, clicked, *urgency_options)
+    Urgency_OM.grid( 
+        row=0,
+        column=3,
+        pady=10,
+        sticky='W'
+        )
+    #Frame Mid One----------------------------------------------------
+    frame_mid_one.columnconfigure(0,weight=1)
+    frame_mid_one.columnconfigure(1,weight=3)
+    frame_mid_one.columnconfigure(2,weight=3)
+    frame_mid_one.columnconfigure(3,weight=1)
+    #State/Priority
+    State_L = Label(frame_mid_one,text="State:")
+    State_L.grid(row=1,column=0, sticky='E')
+    state_options = [
+        ' New',
+        ' In-Progress',
+        ' Resolved',
+    ]
+    clicked = StringVar()
+    clicked.set(state_options[0])
+    State_OM = OptionMenu(frame_mid_one, clicked, *state_options)
+    State_OM.grid( 
+        row=1,
+        column=1,
+        pady=10,
+        sticky='WE'
+        )
+    #Caller
+    Caller_L = Label(frame_mid_one,text='Caller:')
+    Caller_L.grid(row=1,column=2, sticky="WE")
+    Caller_T = Entry(frame_mid_one, width=25)
+    Caller_T.grid(row=1,column=3, sticky="W")
+    #Frame Mid Two----------------------------------------------------
+    frame_mid_two.columnconfigure(0,weight=1)
+    frame_mid_two.columnconfigure(1,weight=1)
+    frame_mid_two.columnconfigure(2,weight=1)
+    frame_mid_two.columnconfigure(3,weight=1)
+    #Email
+    Email_L = Label(frame_mid_two,text='Email:')
+    Email_L.grid(row=2,column=0, sticky="E")
+    Email_T = Entry(frame_mid_two, width=25)
+    Email_T.grid(row=2,column=1, sticky="W")
+    #Frame Mid Three -------------------------------------------------
+    frame_mid_three.columnconfigure(0,weight=1)
+    frame_mid_three.columnconfigure(1,weight=1)
+    frame_mid_three.columnconfigure(2,weight=1)
+    frame_mid_three.columnconfigure(3,weight=1)
+    #Phone Number
+    Phone_L = Label(frame_mid_two,text='Phone:')
+    Phone_L.grid(row=2,column=2, pady=10, sticky="W")
+    Phone_T = Entry(frame_mid_two, width=25)
+    Phone_T.grid(row=2,column=3, pady=10, sticky='W')
+    #Frame Bottom -------------------------------------------------
+    frame_bottom.columnconfigure(0,weight=1)
+    frame_bottom.columnconfigure(1,weight=1)
+    frame_bottom.columnconfigure(2,weight=1)
+    frame_bottom.columnconfigure(3,weight=1)
+    #Description Label
+    Description_L = Label(frame_bottom,text='Request Description:', padx=15)
+    Description_L.grid(row=4,column=0, columnspan=0+4, pady=10)
+    #Frame Bottom Two -------------------------------------------------
+    frame_bottom_two.columnconfigure(0,weight=1)
+    frame_bottom_two.columnconfigure(1,weight=1)
+    frame_bottom_two.columnconfigure(2,weight=1)
+    frame_bottom_two.columnconfigure(3,weight=1)
+    #Description
+    Description_T = Text(frame_bottom_two, wrap=WORD, height=16)
+    Description_T.grid(row=4,column=0, pady=10, padx=20)
+    #Frame Bottom Threhree-------------------------------------------------
+    frame_bottom_three.columnconfigure(0,weight=1)
+    frame_bottom_three.columnconfigure(1,weight=1)
+    frame_bottom_three.columnconfigure(2,weight=1)
+    frame_bottom_three.columnconfigure(3,weight=1)
+    #Action Button
+    Action_button_L = Button(frame_bottom_three,text='Confirm Update', command=update_record, padx=15)
+    Action_button_L.grid(row=5,column=0, columnspan=0+4, pady=10)
+
 def create_csvfile():
     #Connect to DB
     conn = sqlite3.connect('request.db')
@@ -86,7 +228,11 @@ utilities_menu = Menu(app_menubar, tearoff="off")
 app_menubar.add_cascade(label='Utilities', menu=utilities_menu)
 utilities_menu.add_command(label='Show All Records', command=search_records)
 utilities_menu.add_command(label='Create Report', command=create_csvfile)
-
+#Actions
+actions_menu = Menu(app_menubar, tearoff='off')
+app_menubar.add_cascade(label='Actions', menu=actions_menu)
+actions_menu.add_command(label='Update Record', command=initialize_update)
+actions_menu.add_command(label='Delete Record', command=delete_record)
 #Frames
 frame_top = Frame(root,)
 frame_mid_one = Frame(root,)
@@ -149,7 +295,6 @@ def doesTableExist():
         return True
 
 def insertIntoTable():
-
     if Caller_T.get() == '' or Email_T.get() == '' or Phone_T.get() == '' or Description_T.get('1.0', END) == '':
         messagebox.showinfo('Message', 'You have not filled in all fields.')
     else:
@@ -205,6 +350,14 @@ def insertIntoTable():
         Phone_T.delete(0, END)
         Description_T.delete('1.0', END)
 
+def update_record(request_list):
+    conn = sqlite3.connect('request.db')
+    c = conn.cursor()
+    update_stmnt = c.execute('UPDATE request_entry')
+    
+
+
+
 def select_all_records():
     #Create DB/Connect to DB
     conn = sqlite3.connect('request.db')
@@ -224,10 +377,14 @@ frame_top.columnconfigure(1, weight=1)
 frame_top.columnconfigure(2, weight=1)
 frame_top.columnconfigure(3, weight=1)
 #Service
-Service_L = Label(frame_top, text='City Service:')
+Service_L = Label(frame_top, text='Service:')
 Service_L.grid(row=0, column=0,pady=10, sticky='E')
 options = [
-    ' Water',
+    ' EMS',
+    ' Fire',
+    ' Administration',
+    ' Finance',
+    ' City Water',
     ' Sewer',
     ' Trash',
     ' Citizen Inquiry',
@@ -272,7 +429,6 @@ state_options = [
     ' New',
     ' In-Progress',
     ' Resolved',
-    ' Cancelled',
 ]
 clicked = StringVar()
 clicked.set(state_options[0])
