@@ -17,7 +17,8 @@ app_menubar = Menu(root)
 root.config(menu=app_menubar)
 
 current_time = datetime.now()
-formatted_Time = current_time.strftime("%d-%m-%Y %H.%M")
+formatted_date = current_time.strftime("%d-%m-%Y")
+formatted_DateTime = current_time.strftime("%d-%m-%Y %H.%M")
 
 def restart_command():
     root.destroy()
@@ -37,11 +38,10 @@ def search_records():
         c = conn.cursor()
         r_set = c.execute('Select * from request_entry')
         i=0
-        i_list = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130]
         for record in r_set:
             for j in range(len(record)):
                 results_area.grid(row=i)
-                if i in i_list:
+                if not i % 9:
                     results_area.insert(END, '\n\n')
                 else:
                     pass
@@ -63,7 +63,7 @@ def create_csvfile():
     #Pandas to create CSV file
     df = pd.read_sql_query('Select * from request_entry', conn)
     #Handle Reports Folder and file name
-    csv_filename = f'{formatted_Time}.csv'
+    csv_filename = f'{formatted_DateTime}.csv'
     report_dir = './Reports'
     if not os.path.exists(report_dir):
         os.mkdir(report_dir)
@@ -154,7 +154,7 @@ def insertIntoTable():
         messagebox.showinfo('Message', 'You have not filled in all fields.')
     else:
         # current_time = datetime.now()
-        # formatted_Time = current_time.strftime("%d/%m/%Y %H:%M:%S")
+        # formatted_DateTime = current_time.strftime("%d/%m/%Y %H:%M:%S")
         #Create DB/Connect to DB
         conn = sqlite3.connect('request.db')
         #Create Cursor
@@ -180,7 +180,7 @@ def insertIntoTable():
                             'Email_T': Email_T.get(),
                             'Phone_T': Phone_T.get(),
                             'Description_T':Description_T.get('1.0', END),
-                            'current_time': formatted_Time
+                            'current_time': formatted_DateTime
                         })
         #Commit Changes
         conn.commit()
@@ -190,12 +190,12 @@ def insertIntoTable():
         if not os.path.exists(report_dir):
             os.mkdir(report_dir)
             caller_name = Caller_T.get().replace(' ', '-')
-            request_foldername = caller_name + ' ' + formatted_Time
+            request_foldername = caller_name + ' ' + formatted_date
             parent_sub = os.path.join(report_dir, request_foldername)
             os.mkdir(parent_sub)
         else:
             caller_name = Caller_T.get().replace('#%&}{/\?<>*!@$":+`|=', '-')
-            request_foldername = caller_name + ' ' + formatted_Time
+            request_foldername = caller_name + ' ' + formatted_date
             parent_sub = os.path.join(report_dir, request_foldername)
             os.mkdir(parent_sub)
         messagebox.showinfo('Message', "Entry was successful, fields will be cleared.")
