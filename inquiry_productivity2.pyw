@@ -3,11 +3,18 @@ import sqlite3
 from tkinter import *
 from tkinter import messagebox
 import os
+from numpy import record
 import pandas as pd
 
 root = Tk()
 root.title('Request Manager')
-root.geometry('500x550')
+w = 500
+h = 550
+ws = root.winfo_screenwidth()
+hs = root.winfo_screenheight()
+x = (ws/2) - (w/2)
+y = (hs/2) - (h/2)
+root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 root.columnconfigure(0,weight=1) # column weight 100% 
 # root.rowconfigure(0, weight=1) 
 # root.rowconfigure(1, weight=1) # change weight to 4
@@ -27,7 +34,13 @@ def restart_command():
 def search_records():
     newWindow = Toplevel(root)
     newWindow.title('Search Records')
-    newWindow.geometry('1000x500')
+    w = 1000
+    h = 500
+    ws = newWindow.winfo_screenwidth()
+    hs = newWindow.winfo_screenheight()
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    newWindow.geometry('%dx%d+%d+%d' % (w, h, x, y))
     newWindow.columnconfigure(0, weight=1)
     i=1
     def select_all_records():
@@ -61,9 +74,39 @@ def delete_record():
     pass
 
 def initialize_update():
+    collectRecordID = Toplevel(root)
+    collectRecordID.title('Enter Record ID')
+    w = 250
+    h = 250
+    ws = collectRecordID.winfo_screenwidth()
+    hs = collectRecordID.winfo_screenheight()
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    collectRecordID.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    collectRecordID.columnconfigure(0, weight=1)
+    #Frame
+    frame_top = Frame(collectRecordID,)
+    #Frame Grid
+    frame_top.grid(row=0, column=0, sticky='WENS')
+    record_id_label = Label(collectRecordID, text='Enter Record ID: ')
+    record_id_label.grid(row=0, column=0)
+    record_id_entry = Entry(collectRecordID, width=25)
+    record_id_entry.grid(row=1, column=0)
+    submit_id_btn = Button(collectRecordID,text='Update Record', command=lambda: update_screen(collectRecordID, record_id_entry.get().strip()))
+    submit_id_btn.grid(row=2, column=0)
+    
+def update_screen(old_window, rcd_id):
+    old_window.destroy()
+    print(rcd_id)
     updateWindow = Toplevel(root)
     updateWindow.title('Update Record')
-    updateWindow.geometry('500x550')
+    w = 500
+    h = 550
+    ws = updateWindow.winfo_screenwidth()
+    hs = updateWindow.winfo_screenheight()
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    updateWindow.geometry('%dx%d+%d+%d' % (w, h, x, y))
     updateWindow.columnconfigure(0, weight=1)
     #Frames
     frame_top = Frame(updateWindow,)
@@ -249,20 +292,6 @@ frame_mid_three.grid(row=3, column=0, sticky='WENS')
 frame_bottom.grid(row=4, column=0, sticky='WENS')
 frame_bottom_two.grid(row=5, column=0, sticky='WENS')
 frame_bottom_three.grid(row=6, column=0, sticky='WENS')
-
-Service_OM = StringVar()
-
-# #Create DB/Connect to DB
-# conn = sqlite3.connect('request.db')
-# #Create Cursor
-# c = conn.cursor()
-
-# c.execute('''Drop table if exists request_entry ''')
-
-# #Commit Changes
-# conn.commit()
-# #Close connection
-# conn.close()
 
 def doesTableExist():
     #Create DB/Connect to DB
