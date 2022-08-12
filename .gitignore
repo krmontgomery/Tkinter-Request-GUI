@@ -6,4 +6,4 @@ send_reminder_email.py
 ms-outlook-task.py
 sensitive.config
 # Datasource
-db.sqslite3
+db.sqlite3
