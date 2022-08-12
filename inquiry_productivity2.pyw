@@ -133,7 +133,7 @@ def update_screen(old_window, rcd_id):
     Service_L = Label(frame_top, text='Service:')
     Service_L.grid(row=0, column=0,pady=10, sticky='E')
     options = [
-        ' EMS',
+        ' Police',
         ' Fire',
         ' Administration',
         ' Finance',
@@ -193,7 +193,7 @@ def update_screen(old_window, rcd_id):
         sticky='WE'
         )
     #Caller
-    Caller_L = Label(frame_mid_one,text='Caller:')
+    Caller_L = Label(frame_mid_one,text='Name:')
     Caller_L.grid(row=1,column=2, sticky="WE")
     Caller_T = Entry(frame_mid_one, width=25)
     Caller_T.grid(row=1,column=3, sticky="W")

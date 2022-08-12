@@ -1,0 +1,9 @@
+# Folders
+**/Reports
+**/Request_Documentation
+# Files
+send_reminder_email.py
+ms-outlook-task.py
+sensitive.config
+# Datasource
+db.sqslite3
