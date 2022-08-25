@@ -8,8 +8,8 @@ import pandas as pd
 
 root = Tk()
 root.title('Request Manager')
-w = 500
-h = 550
+w = 520
+h = 570
 ws = root.winfo_screenwidth()
 hs = root.winfo_screenheight()
 x = (ws/2) - (w/2)
@@ -54,7 +54,7 @@ def search_records():
         for record in r_set:
             for j in range(len(record)):
                 results_area.grid(row=i)
-                if not i % 9:
+                if not i % 10:
                     results_area.insert(END, '\n\n')
                 else:
                     pass
@@ -100,8 +100,8 @@ def update_screen(old_window, rcd_id):
     print(rcd_id)
     updateWindow = Toplevel(root)
     updateWindow.title('Update Record')
-    w = 500
-    h = 550
+    w = 520
+    h = 570
     ws = updateWindow.winfo_screenwidth()
     hs = updateWindow.winfo_screenheight()
     x = (ws/2) - (w/2)
@@ -114,6 +114,7 @@ def update_screen(old_window, rcd_id):
     frame_mid_two = Frame(updateWindow,)
     frame_mid_three = Frame(updateWindow,)
     frame_bottom = Frame(updateWindow,)
+    frame_bottom_one = Frame(updateWindow,)
     frame_bottom_two = Frame(updateWindow,)
     frame_bottom_three = Frame(updateWindow,)
     #Frame Grid
@@ -122,8 +123,9 @@ def update_screen(old_window, rcd_id):
     frame_mid_two.grid(row=2, column=0, sticky='WENS')
     frame_mid_three.grid(row=3, column=0, sticky='WENS')
     frame_bottom.grid(row=4, column=0, sticky='WENS')
-    frame_bottom_two.grid(row=5, column=0, sticky='WENS')
-    frame_bottom_three.grid(row=6, column=0, sticky='WENS')
+    frame_bottom_one.grid(row=5, column=0, sticky='WENS')
+    frame_bottom_two.grid(row=6, column=0, sticky='WENS')
+    frame_bottom_three.grid(row=7, column=0, sticky='WENS')
     #Frame Top 
     frame_top.columnconfigure(0, weight=1)
     frame_top.columnconfigure(1, weight=1)
@@ -222,9 +224,20 @@ def update_screen(old_window, rcd_id):
     frame_bottom.columnconfigure(1,weight=1)
     frame_bottom.columnconfigure(2,weight=1)
     frame_bottom.columnconfigure(3,weight=1)
+    #Completion Date Label ---------------------------------------
+    completed_Date_L = Label(frame_bottom, text='Completion Date:', padx=15)
+    completed_Date_L.grid(row=4, column=1, pady=10)
+    #Completed Date ----------------------------------------------
+    completed_Date_input = Entry(frame_bottom, width=25)
+    completed_Date_input.grid(row=4, column=2)
+    #Frame Bottom One -------------------------------------------------
+    frame_bottom_one.columnconfigure(0,weight=1)
+    frame_bottom_one.columnconfigure(1,weight=1)
+    frame_bottom_one.columnconfigure(2,weight=1)
+    frame_bottom_one.columnconfigure(3,weight=1)
     #Description Label
-    Description_L = Label(frame_bottom,text='Request Description:', padx=15)
-    Description_L.grid(row=4,column=0, columnspan=0+4, pady=10)
+    Description_L = Label(frame_bottom_one,text='Request Description:', padx=15)
+    Description_L.grid(row=5,column=0, columnspan=0+4, pady=10)
     #Frame Bottom Two -------------------------------------------------
     frame_bottom_two.columnconfigure(0,weight=1)
     frame_bottom_two.columnconfigure(1,weight=1)
@@ -232,7 +245,7 @@ def update_screen(old_window, rcd_id):
     frame_bottom_two.columnconfigure(3,weight=1)
     #Description
     Description_T = Text(frame_bottom_two, wrap=WORD, height=16)
-    Description_T.grid(row=4,column=0, pady=10, padx=20)
+    Description_T.grid(row=6,column=0, pady=10, padx=20)
     #Frame Bottom Threhree-------------------------------------------------
     frame_bottom_three.columnconfigure(0,weight=1)
     frame_bottom_three.columnconfigure(1,weight=1)
@@ -240,7 +253,7 @@ def update_screen(old_window, rcd_id):
     frame_bottom_three.columnconfigure(3,weight=1)
     #Action Button
     Action_button_L = Button(frame_bottom_three,text='Confirm Update', command=update_record, padx=15)
-    Action_button_L.grid(row=5,column=0, columnspan=0+4, pady=10)
+    Action_button_L.grid(row=7,column=0, columnspan=0+4, pady=10)
 
 def create_csvfile():
     #Connect to DB
@@ -282,6 +295,7 @@ frame_mid_one = Frame(root,)
 frame_mid_two = Frame(root,)
 frame_mid_three = Frame(root,)
 frame_bottom = Frame(root,)
+frame_bottom_one = Frame(root,)
 frame_bottom_two = Frame(root,)
 frame_bottom_three = Frame(root,)
 #Frame Grid
@@ -290,8 +304,9 @@ frame_mid_one.grid(row=1, column=0, sticky='WENS')
 frame_mid_two.grid(row=2, column=0, sticky='WENS')
 frame_mid_three.grid(row=3, column=0, sticky='WENS')
 frame_bottom.grid(row=4, column=0, sticky='WENS')
-frame_bottom_two.grid(row=5, column=0, sticky='WENS')
-frame_bottom_three.grid(row=6, column=0, sticky='WENS')
+frame_bottom_one.grid(row=5, column=0, sticky='WENS')
+frame_bottom_two.grid(row=6, column=0, sticky='WENS')
+frame_bottom_three.grid(row=7, column=0, sticky='WENS')
 
 def doesTableExist():
     #Create DB/Connect to DB
@@ -311,6 +326,7 @@ def doesTableExist():
             caller text,
             email text,
             phone integer,
+            completed_date text,
             description text,
             entered_timestamp text
             );""")
@@ -341,10 +357,11 @@ def insertIntoTable():
                     caller,
                     email,
                     phone,
+                    completed_date,
                     description,
                     entered_timestamp)
                 VALUES (:Service_OM, :Urgency_OM, :State_OM,
-                        :Caller_T, :Email_T, :Phone_T,
+                        :Caller_T, :Email_T, :Phone_T, :Completed_Date,
                         :Description_T, :current_time) """,
                         {
                             'Service_OM': Service_OM['text'],
@@ -353,6 +370,7 @@ def insertIntoTable():
                             'Caller_T': Caller_T.get(),
                             'Email_T': Email_T.get(),
                             'Phone_T': Phone_T.get(),
+                            'Completed_Date': completed_Date_input.get(),
                             'Description_T':Description_T.get('1.0', END),
                             'current_time': formatted_DateTime
                         })
@@ -377,6 +395,7 @@ def insertIntoTable():
         Caller_T.delete(0, END)
         Email_T.delete(0, END)
         Phone_T.delete(0, END)
+        completed_Date_input.delete(0, END)
         Description_T.delete('1.0', END)
 
 def update_record(request_list):
@@ -498,8 +517,19 @@ frame_bottom.columnconfigure(0,weight=1)
 frame_bottom.columnconfigure(1,weight=1)
 frame_bottom.columnconfigure(2,weight=1)
 frame_bottom.columnconfigure(3,weight=1)
+#Completion Date Label ---------------------------------------
+completed_Date_L = Label(frame_bottom, text='Completion Date:', padx=15)
+completed_Date_L.grid(row=4, column=1, pady=10, sticky='E')
+#Completed Date ----------------------------------------------
+completed_Date_input = Entry(frame_bottom, width=25)
+completed_Date_input.grid(row=4, column=2, sticky='W')
+#Frame Bottom One -------------------------------------------------
+frame_bottom_one.columnconfigure(0,weight=1)
+frame_bottom_one.columnconfigure(1,weight=1)
+frame_bottom_one.columnconfigure(2,weight=1)
+frame_bottom_one.columnconfigure(3,weight=1)
 #Description Label
-Description_L = Label(frame_bottom,text='Request Description:', padx=15)
+Description_L = Label(frame_bottom_one,text='Request Description:', padx=15)
 Description_L.grid(row=4,column=0, columnspan=0+4, pady=10)
 #Frame Bottom Two -------------------------------------------------
 frame_bottom_two.columnconfigure(0,weight=1)
