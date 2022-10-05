@@ -5,6 +5,7 @@ from tkinter import messagebox
 import os
 from numpy import record
 import pandas as pd
+from setuptools import Command
 
 root = Tk()
 root.title('Request Manager')
@@ -70,30 +71,8 @@ def search_records():
     search_table = Button(newWindow, text='Search', command=select_all_records)
     search_table.grid(row=0, pady=10)
 
-def delete_record():
-    pass
-
-def initialize_update():
-    collectRecordID = Toplevel(root)
-    collectRecordID.title('Enter Record ID')
-    w = 250
-    h = 250
-    ws = collectRecordID.winfo_screenwidth()
-    hs = collectRecordID.winfo_screenheight()
-    x = (ws/2) - (w/2)
-    y = (hs/2) - (h/2)
-    collectRecordID.geometry('%dx%d+%d+%d' % (w, h, x, y))
-    collectRecordID.columnconfigure(0, weight=1)
-    #Frame
-    frame_top = Frame(collectRecordID,)
-    #Frame Grid
-    frame_top.grid(row=0, column=0, sticky='WENS')
-    record_id_label = Label(collectRecordID, text='Enter Record ID: ')
-    record_id_label.grid(row=0, column=0)
-    record_id_entry = Entry(collectRecordID, width=25)
-    record_id_entry.grid(row=1, column=0)
-    submit_id_btn = Button(collectRecordID,text='Update Record', command=lambda: update_screen(collectRecordID, record_id_entry.get().strip()))
-    submit_id_btn.grid(row=2, column=0)
+def open_manage_requests():
+    initialize_mr_app()
     
 def update_screen(old_window, rcd_id):
     old_window.destroy()
@@ -287,8 +266,7 @@ utilities_menu.add_command(label='Create Report', command=create_csvfile)
 #Actions
 actions_menu = Menu(app_menubar, tearoff='off')
 app_menubar.add_cascade(label='Actions', menu=actions_menu)
-actions_menu.add_command(label='Update Record', command=initialize_update)
-actions_menu.add_command(label='Delete Record', command=delete_record)
+actions_menu.add_command(label='Manage Requests', command=open_manage_requests)
 #Frames
 frame_top = Frame(root,)
 frame_mid_one = Frame(root,)
@@ -307,6 +285,159 @@ frame_bottom.grid(row=4, column=0, sticky='WENS')
 frame_bottom_one.grid(row=5, column=0, sticky='WENS')
 frame_bottom_two.grid(row=6, column=0, sticky='WENS')
 frame_bottom_three.grid(row=7, column=0, sticky='WENS')
+
+
+
+
+
+def select_statement():
+    #Select Statement to fill Listbox
+    #Create connection to DB
+    conn = sqlite3.connect('request.db')
+    #Create Cursor
+    c = conn.cursor()
+    #Statement to execute
+    c.execute(''' Select * from request_entry order by id; ''')
+    for i in c:
+        print(i)
+    conn.commit()
+    #Close connection to DB
+    conn.close()
+
+def initialize_mr_app():
+    window = Toplevel(root)
+    window.title('Manage Requests')
+
+    #Service select
+    manage_request_ServiceL = Label(window, text='Service:')
+    manage_request_ServiceL.grid(row=0, column=0, pady=(10, 0), padx=(10, 0))
+    options = [
+        ' EMS',
+        ' Fire',
+        ' Administration',
+        ' Finance',
+        ' City Water',
+        ' Sewer',
+        ' Trash',
+        ' Citizen Inquiry',
+    ]
+    clicked_Service = StringVar()
+    clicked_Service.set(' EMS')
+    manage_request_Service = OptionMenu(window, clicked_Service, *options)
+    manage_request_Service.grid(
+        row=0, 
+        column=1,
+        pady=(10, 0),
+        sticky='W'
+        )
+    #Urgency Select
+    manage_request_UrgencyL = Label(window, text='Urgency:')
+    manage_request_UrgencyL.grid(row=0, column=2, pady=(10, 0), sticky='EW')
+
+    urgency_options = [
+        ' Low',
+        ' Medium',
+        ' High',
+        ' Emergency',
+    ]
+    clicked = StringVar()
+    clicked.set(' Low')
+    Urgency_OM = OptionMenu(window, clicked, *urgency_options)
+    Urgency_OM.grid( 
+        row=0,
+        column=3,
+        sticky='EW',
+        pady=(10, 0)
+        )
+    #Request State
+    manage_request_StateL = Label(window, text='State:')
+    manage_request_StateL.grid(row=1, column=0, padx=(10, 0))
+
+    state_options = [
+        ' New',
+        ' In-Progress',
+        ' Resolved',
+    ]
+    clicked = StringVar()
+    clicked.set(' New')
+    manage_request_State = OptionMenu(window, clicked, *state_options)
+    manage_request_State.grid( 
+        row=1,
+        column=1,
+        sticky='W'
+        )
+    #Name
+    manage_request_NameL = Label(window, text='Name:')
+    manage_request_NameL.grid(row=1, column=2, sticky='EW')
+
+    mr_name = StringVar()
+    manage_request_Name = Entry(window, textvariable=mr_name)
+    manage_request_Name.grid(row=1, column=3,sticky='W')
+    #Email
+    manage_request_EmailL = Label(window, text='Email:')
+    manage_request_EmailL.grid(row=2, column=0, padx=(10, 0))
+
+    mr_email = StringVar()
+    manage_request_Email = Entry(window, textvariable=mr_email)
+    manage_request_Email.grid(row=2, column=1,sticky='W')
+    #Phone
+    manage_request_PhoneL = Label(window, text='Phone:')
+    manage_request_PhoneL.grid(row=2, column=2,sticky='EW')
+
+    mr_phone = StringVar()
+    manage_request_Phone = Entry(window, textvariable=mr_phone)
+    manage_request_Phone.grid(row=2, column=3,sticky='W')
+    #Completion Date
+    manage_request_CompletionL = Label(window, text='Completion Date:')
+    manage_request_CompletionL.grid(row=3, column=1)
+
+    mr_CompletionDate = StringVar()
+    manage_request_Completion = Entry(window, textvariable=mr_CompletionDate)
+    manage_request_Completion.grid(row=3, column=2)
+    #Request Description
+    request_descriptionL = Label(window, text='Request Description:')
+    request_descriptionL.grid(row=4, column=1, columnspan=3)
+
+    name_text7 = StringVar()
+    request_description = Text(window, wrap=WORD, height=10, width=50)
+    request_description.grid(row=5, column=1, columnspan=3)
+
+    #Show records Widget
+    listbox_ = Listbox(window, height=20, width=59)
+    listbox_.grid(row=0, column=6, rowspan=6, columnspan=2, padx=(0,10), pady=(10,0))
+    #Scrollbar
+    scrl = Scrollbar(window,)
+    scrl.grid(row=0, column=5, sticky='ns', rowspan=6, padx=(10, 0), pady=(10,0))
+    #Attachment
+    listbox_.configure(yscrollcommand=scrl.set)
+    scrl.configure(command=listbox_.yview)
+    
+    def view_command():
+        rows_returned = manage_requests_view()
+        listbox_.delete(0,END)
+        for row in rows_returned:
+            listbox_.insert(END, row)
+    #Buttons
+    #Update
+    b1 = Button(window, text='Update', width=12)
+    b1.grid(row=7, column=1, pady=(0,10))
+    #Delete
+    b2 = Button(window, text='Delete', width=12)
+    b2.grid(row=7, column=3, pady=(0,10))
+    #View Records
+    b3 = Button(window, text='View Records', command=view_command)
+    b3.grid(row=7, column=6, columnspan=2)
+
+
+    def manage_requests_view():
+        conn = sqlite3.connect('request.db')
+        cur=conn.cursor()
+        cur.execute('Select * from request_entry')
+        rows = cur.fetchall()
+        conn.close()
+        return rows
+
+    # window.mainloop()
 
 def doesTableExist():
     #Create DB/Connect to DB
