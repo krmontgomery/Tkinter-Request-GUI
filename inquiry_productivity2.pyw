@@ -5,7 +5,6 @@ from tkinter import messagebox
 import os
 from numpy import record
 import pandas as pd
-from setuptools import Command
 
 root = Tk()
 root.title('Request Manager')
@@ -287,9 +286,6 @@ frame_bottom_two.grid(row=6, column=0, sticky='WENS')
 frame_bottom_three.grid(row=7, column=0, sticky='WENS')
 
 
-
-
-
 def select_statement():
     #Select Statement to fill Listbox
     #Create connection to DB
@@ -307,12 +303,20 @@ def select_statement():
 def initialize_mr_app():
     window = Toplevel(root)
     window.title('Manage Requests')
+    w = 900
+    h = 400
+    ws = window.winfo_screenwidth()
+    hs = window.winfo_screenheight()
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+    window.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    window.columnconfigure(0, weight=1)
 
     #Service select
     manage_request_ServiceL = Label(window, text='Service:')
     manage_request_ServiceL.grid(row=0, column=0, pady=(10, 0), padx=(10, 0))
     options = [
-        ' EMS',
+        ' Police',
         ' Fire',
         ' Administration',
         ' Finance',
@@ -322,7 +326,7 @@ def initialize_mr_app():
         ' Citizen Inquiry',
     ]
     clicked_Service = StringVar()
-    clicked_Service.set(' EMS')
+    clicked_Service.set(' Police')
     manage_request_Service = OptionMenu(window, clicked_Service, *options)
     manage_request_Service.grid(
         row=0, 
@@ -417,9 +421,81 @@ def initialize_mr_app():
         listbox_.delete(0,END)
         for row in rows_returned:
             listbox_.insert(END, row)
+    def get_selected_record(event):
+        index = listbox_.curselection()[0]
+        selected_record = listbox_.get(index)
+        #Service Option menu
+        service_options = [
+        ' Police',
+        ' Fire',
+        ' Administration',
+        ' Finance',
+        ' City Water',
+        ' Sewer',
+        ' Trash',
+        ' Citizen Inquiry',
+        ]
+        manage_request_Service.destroy()
+        clicked_Service.set(selected_record[1])
+        manage_Service = OptionMenu(window, clicked_Service, *service_options)
+        manage_Service.grid(
+            row=0, 
+            column=1,
+            pady=(10, 0),
+            sticky='W'
+            )
+        #Urgency Option Menu
+        Urgency_OM.destroy()
+        urgency_options = [
+            ' Low',
+            ' Medium',
+            ' High',
+            ' Emergency',
+        ]
+        clicked_Urgency = StringVar()
+        clicked_Urgency.set(selected_record[2])
+        Manage_Request_Urgency = OptionMenu(window, clicked_Urgency, *urgency_options)
+        Manage_Request_Urgency.grid( 
+            row=0,
+            column=3,
+            sticky='EW',
+            pady=(10, 0)
+            )
+        #State Option Menu
+        manage_request_State.destroy()
+        state_options = [
+        ' New',
+        ' In-Progress',
+        ' Resolved'
+        ]
+        clicked_state = StringVar()
+        clicked_state.set(selected_record[3])
+        manage_request_State2 = OptionMenu(window, clicked_state, *state_options)
+        manage_request_State2.grid( 
+            row=1,
+            column=1,
+            sticky='EW'
+            )
+        #Name
+        manage_request_Name.delete(0, END)
+        manage_request_Name.insert(END, selected_record[4])
+        #Email
+        manage_request_Email.delete(0, END)
+        manage_request_Email.insert(END, selected_record[5])
+        #Phone
+        manage_request_Phone.delete(0, END)
+        manage_request_Phone.insert(END, selected_record[6])
+        #Completion Date
+        manage_request_Completion.delete(0, END)
+        manage_request_Completion.insert(END, selected_record[7])
+        #Request Description
+        request_description.delete('1.0', END)
+        request_description.insert('1.0', selected_record[8])
+
+    listbox_.bind('<<ListboxSelect>>', get_selected_record)
     #Buttons
     #Update
-    b1 = Button(window, text='Update', width=12)
+    b1 = Button(window, text='Update', width=12, command=get_selected_record)
     b1.grid(row=7, column=1, pady=(0,10))
     #Delete
     b2 = Button(window, text='Delete', width=12)
@@ -523,6 +599,61 @@ def insertIntoTable():
             os.mkdir(parent_sub)
         messagebox.showinfo('Message', "Entry was successful, fields will be cleared.")
         #Clear fields
+        #Service
+        Service_OM.destroy()
+        options = [
+            ' Police',
+            ' Fire',
+            ' Administration',
+            ' Finance',
+            ' City Water',
+            ' Sewer',
+            ' Trash',
+            ' Citizen Inquiry',
+        ]
+        clicked = StringVar()
+        clicked.set(options[0])
+        Service_OM2 = OptionMenu(frame_top, clicked, *options)
+        Service_OM2.grid(
+            row=0, 
+            column=1,
+            pady=10,
+            padx=15,
+            sticky='W'
+            )
+        #Task Urgency
+        Urgency_OM.destroy()
+        urgency_options = [
+            ' Low',
+            ' Medium',
+            ' High',
+            ' Emergency',
+        ]
+        clicked = StringVar()
+        clicked.set(urgency_options[0])
+        Urgency_OM2 = OptionMenu(frame_top, clicked, *urgency_options)
+        Urgency_OM2.grid( 
+            row=0,
+            column=3,
+            pady=10,
+            sticky='W'
+            )
+        #State/Priority
+        State_OM.destroy()
+        state_options = [
+            ' New',
+            ' In-Progress',
+            ' Resolved',
+        ]
+        clicked = StringVar()
+        clicked.set(state_options[0])
+        State_OM2 = OptionMenu(frame_mid_one, clicked, *state_options)
+        State_OM2.grid( 
+            row=1,
+            column=1,
+            pady=10,
+            sticky='WE'
+            )
         Caller_T.delete(0, END)
         Email_T.delete(0, END)
         Phone_T.delete(0, END)
@@ -559,7 +690,7 @@ frame_top.columnconfigure(3, weight=1)
 Service_L = Label(frame_top, text='Service:')
 Service_L.grid(row=0, column=0,pady=10, sticky='E')
 options = [
-    ' EMS',
+    ' Police',
     ' Fire',
     ' Administration',
     ' Finance',
