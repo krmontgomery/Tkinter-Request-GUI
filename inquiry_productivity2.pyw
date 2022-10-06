@@ -300,6 +300,14 @@ def select_statement():
     #Close connection to DB
     conn.close()
 
+def update_statement():
+    conn = sqlite3.connect('request.db')
+    c = conn.cursor()
+    c.execute(''' Update ''')
+
+def delete_statement():
+    pass
+
 def initialize_mr_app():
     window = Toplevel(root)
     window.title('Manage Requests')
@@ -344,9 +352,9 @@ def initialize_mr_app():
         ' High',
         ' Emergency',
     ]
-    clicked = StringVar()
-    clicked.set(' Low')
-    Urgency_OM = OptionMenu(window, clicked, *urgency_options)
+    clicked_urgent = StringVar()
+    clicked_urgent.set(' Low')
+    Urgency_OM = OptionMenu(window, clicked_urgent, *urgency_options)
     Urgency_OM.grid( 
         row=0,
         column=3,
@@ -362,9 +370,9 @@ def initialize_mr_app():
         ' In-Progress',
         ' Resolved',
     ]
-    clicked = StringVar()
-    clicked.set(' New')
-    manage_request_State = OptionMenu(window, clicked, *state_options)
+    clicked_state = StringVar()
+    clicked_state.set(' New')
+    manage_request_State = OptionMenu(window, clicked_state, *state_options)
     manage_request_State.grid( 
         row=1,
         column=1,
@@ -407,7 +415,7 @@ def initialize_mr_app():
     request_description.grid(row=5, column=1, columnspan=3)
 
     #Show records Widget
-    listbox_ = Listbox(window, height=20, width=59)
+    listbox_ = Listbox(window, height=20, width=59, exportselection=0)
     listbox_.grid(row=0, column=6, rowspan=6, columnspan=2, padx=(0,10), pady=(10,0))
     #Scrollbar
     scrl = Scrollbar(window,)
@@ -421,6 +429,7 @@ def initialize_mr_app():
         listbox_.delete(0,END)
         for row in rows_returned:
             listbox_.insert(END, row)
+
     def get_selected_record(event):
         index = listbox_.curselection()[0]
         selected_record = listbox_.get(index)
@@ -493,9 +502,25 @@ def initialize_mr_app():
         request_description.insert('1.0', selected_record[8])
 
     listbox_.bind('<<ListboxSelect>>', get_selected_record)
+
+    def update_command():
+        print(listbox_.curselection()[0])
+        my_id = listbox_.curselection()[0]
+        # print(clicked_Service.get(),clicked_urgent.get(),clicked_state.get(),manage_request_Name.get(), manage_request_Email.get(), manage_request_Phone.get(),
+        #         manage_request_Completion.get(), request_description.get('1.0', END))
+        conn = sqlite3.connect('request.db')
+        c = conn.cursor()
+        # c.execute("Select id from request_entry where city_service = ? and urgency = ? and state = ? and caller = ? and email = ? and phone = ? and completed_date = ? and description = ?",(clicked_Service.get(),clicked_urgent.get(),clicked_state.get(),manage_request_Name.get(), manage_request_Email.get(), manage_request_Phone.get(), manage_request_Completion.get(), request_description.get('1.0', END)))
+        # my_id = c.lastrowid
+        c.execute("UPDATE request_entry SET city_service=? OR urgency=? OR state=? OR caller=? OR email=? OR phone=? OR completed_date=? OR description=? WHERE id=?",
+                   (clicked_Service.get().strip(),clicked_urgent.get().strip(),clicked_state.get().strip(),manage_request_Name.get().strip(), manage_request_Email.get().strip(),
+                   manage_request_Phone.get().strip(), manage_request_Completion.get().strip(), request_description.get('1.0', END).strip(), my_id))
+        conn.commit()
+        conn.close()
+
     #Buttons
     #Update
-    b1 = Button(window, text='Update', width=12, command=get_selected_record)
+    b1 = Button(window, text='Update', width=12, command=update_command)
     b1.grid(row=7, column=1, pady=(0,10))
     #Delete
     b2 = Button(window, text='Delete', width=12)
@@ -571,9 +596,9 @@ def insertIntoTable():
                         :Caller_T, :Email_T, :Phone_T, :Completed_Date,
                         :Description_T, :current_time) """,
                         {
-                            'Service_OM': Service_OM['text'],
-                            'Urgency_OM': Urgency_OM['text'],
-                            'State_OM': State_OM['text'],
+                            'Service_OM': Service_OM['test'],
+                            'Urgency_OM': Urgency_OM['test'],
+                            'State_OM': State_OM['test'],
                             'Caller_T': Caller_T.get(),
                             'Email_T': Email_T.get(),
                             'Phone_T': Phone_T.get(),
@@ -619,7 +644,7 @@ def insertIntoTable():
             column=1,
             pady=10,
             padx=15,
-            sticky='W'
+            sticky='EW'
             )
         #Task Urgency
         Urgency_OM.destroy()
@@ -636,7 +661,7 @@ def insertIntoTable():
             row=0,
             column=3,
             pady=10,
-            sticky='W'
+            sticky='EW'
             )
         #State/Priority
         State_OM.destroy()
@@ -652,21 +677,13 @@ def insertIntoTable():
             row=1,
             column=1,
             pady=10,
-            sticky='WE'
+            sticky='EW'
             )
         Caller_T.delete(0, END)
         Email_T.delete(0, END)
         Phone_T.delete(0, END)
         completed_Date_input.delete(0, END)
         Description_T.delete('1.0', END)
-
-def update_record(request_list):
-    conn = sqlite3.connect('request.db')
-    c = conn.cursor()
-    update_stmnt = c.execute('UPDATE request_entry')
-    
-
-
 
 def select_all_records():
     #Create DB/Connect to DB
@@ -678,8 +695,6 @@ def select_all_records():
     conn.commit()
     #Close connection
     conn.close()
-
-
 
 #Frame Top 
 frame_top.columnconfigure(0, weight=1)
@@ -699,15 +714,15 @@ options = [
     ' Trash',
     ' Citizen Inquiry',
 ]
-clicked = StringVar()
-clicked.set(options[0])
-Service_OM = OptionMenu(frame_top, clicked, *options)
+clicked_serv = StringVar()
+clicked_serv.set(options[0])
+Service_OM = OptionMenu(frame_top, clicked_serv, *options)
 Service_OM.grid(
     row=0, 
     column=1,
     pady=10,
     padx=15,
-    sticky='W'
+    sticky='EW'
     )
 #Task
 Urgency_L = Label(frame_top,text="Urgency:")
@@ -718,14 +733,14 @@ urgency_options = [
     ' High',
     ' Emergency',
 ]
-clicked = StringVar()
-clicked.set(urgency_options[0])
-Urgency_OM = OptionMenu(frame_top, clicked, *urgency_options)
+clicked_urg = StringVar()
+clicked_urg.set(urgency_options[0])
+Urgency_OM = OptionMenu(frame_top, clicked_urg, *urgency_options)
 Urgency_OM.grid( 
     row=0,
     column=3,
     pady=10,
-    sticky='W'
+    sticky='EW'
     )
 #Frame Mid One----------------------------------------------------
 frame_mid_one.columnconfigure(0,weight=1)
@@ -740,14 +755,14 @@ state_options = [
     ' In-Progress',
     ' Resolved',
 ]
-clicked = StringVar()
-clicked.set(state_options[0])
-State_OM = OptionMenu(frame_mid_one, clicked, *state_options)
+clicked_stat = StringVar()
+clicked_stat.set(state_options[0])
+State_OM = OptionMenu(frame_mid_one, clicked_stat, *state_options)
 State_OM.grid( 
     row=1,
     column=1,
     pady=10,
-    sticky='WE'
+    sticky='EW'
     )
 #Caller
 Caller_L = Label(frame_mid_one,text='Caller:')
