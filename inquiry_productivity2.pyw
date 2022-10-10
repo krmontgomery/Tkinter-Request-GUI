@@ -165,17 +165,17 @@ def initialize_mr_app():
     manage_request_ServiceL = Label(window, text='Service:')
     manage_request_ServiceL.grid(row=0, column=0, pady=(10, 0), padx=(10, 0))
     options = [
-        ' Police',
-        ' Fire',
-        ' Administration',
-        ' Finance',
-        ' City Water',
-        ' Sewer',
-        ' Trash',
-        ' Citizen Inquiry',
+        'Police',
+        'Fire',
+        'Administration',
+        'Finance',
+        'City Water',
+        'Sewer',
+        'Trash',
+        'Citizen Inquiry',
     ]
     clicked_Service = StringVar()
-    clicked_Service.set(' Police')
+    clicked_Service.set('Police')
     manage_request_Service = OptionMenu(window, clicked_Service, *options)
     manage_request_Service.grid(
         row=0, 
@@ -188,10 +188,10 @@ def initialize_mr_app():
     manage_request_UrgencyL.grid(row=0, column=2, pady=(10, 0), sticky='EW')
 
     urgency_options = [
-        ' Low',
-        ' Medium',
-        ' High',
-        ' Emergency',
+        'Low',
+        'Medium',
+        'High',
+        'Emergency',
     ]
     clicked_urgent = StringVar()
     clicked_urgent.set(' Low')
@@ -207,9 +207,9 @@ def initialize_mr_app():
     manage_request_StateL.grid(row=1, column=0, padx=(10, 0))
 
     state_options = [
-        ' New',
-        ' In-Progress',
-        ' Resolved',
+        'New',
+        'In-Progress',
+        'Resolved',
     ]
     clicked_state = StringVar()
     clicked_state.set(' New')
@@ -274,18 +274,18 @@ def initialize_mr_app():
     def get_selected_record(event):
         index = listbox_.curselection()[0]
         selected_record = listbox_.get(index)
+        print(f'{selected_record[1]} / {selected_record[2]} / {selected_record[3]}')
         #Service Option menu
         service_options = [
-        ' Police',
-        ' Fire',
-        ' Administration',
-        ' Finance',
-        ' City Water',
-        ' Sewer',
-        ' Trash',
-        ' Citizen Inquiry',
+        'Police',
+        'Fire',
+        'Administration',
+        'Finance',
+        'City Water',
+        'Sewer',
+        'Trash',
+        'Citizen Inquiry',
         ]
-        manage_request_Service.destroy()
         clicked_Service.set(selected_record[1])
         manage_Service = OptionMenu(window, clicked_Service, *service_options)
         manage_Service.grid(
@@ -295,30 +295,26 @@ def initialize_mr_app():
             sticky='W'
             )
         #Urgency Option Menu
-        Urgency_OM.destroy()
         urgency_options = [
             ' Low',
             ' Medium',
             ' High',
             ' Emergency',
         ]
-        clicked_Urgency = StringVar()
-        clicked_Urgency.set(selected_record[2])
-        Manage_Request_Urgency = OptionMenu(window, clicked_Urgency, *urgency_options)
-        Manage_Request_Urgency.grid( 
+        clicked_urgent.set(selected_record[2])
+        manage_request_urgency = OptionMenu(window, clicked_urgent, *urgency_options)
+        manage_request_urgency.grid( 
             row=0,
             column=3,
             sticky='EW',
             pady=(10, 0)
             )
         #State Option Menu
-        manage_request_State.destroy()
         state_options = [
         ' New',
         ' In-Progress',
         ' Resolved'
         ]
-        clicked_state = StringVar()
         clicked_state.set(selected_record[3])
         manage_request_State2 = OptionMenu(window, clicked_state, *state_options)
         manage_request_State2.grid( 
@@ -360,12 +356,21 @@ def initialize_mr_app():
     #     conn.close()
     #     print(my_id)
     #     return my_id
+
+    def delete_command():
+        print(root.focus_get())
+        if str(root.focus_get()) != '.!toplevel.!listbox':
+            print('poo')
+        else: 
+            print('yay')
+            # print('Nothing is selected.')
     
 
     def update_command():
         # me_id = find_record_id()
         # me_id = str(me_id).strip('(,)')
-        # print(me_id)
+        print(f'Value being updates are {clicked_Service.get(),clicked_urgent.get().strip(),clicked_state.get()}')
+        print(service_options[0])
         me_id = listbox_.curselection()[0] + 1
         conn = sqlite3.connect('request.db')
         c = conn.cursor()
@@ -376,13 +381,29 @@ def initialize_mr_app():
                     manage_request_Completion.get().strip(), request_description.get('1.0', END).strip(), me_id))
         conn.commit()
         conn.close()
+        #Service Option Reset
+        clicked_Service.set(service_options[0])
+        #Urgency options reset
+        clicked_urgent.set(urgency_options[0])
+        #State Options Reset
+        clicked_state.set(state_options[0])
+        #Name
+        manage_request_Name.delete(0, END)
+        #Email
+        manage_request_Email.delete(0, END)
+        #Phone
+        manage_request_Phone.delete(0, END)
+        #Completion Date
+        manage_request_Completion.delete(0, END)
+        #Request Description
+        request_description.delete('1.0', END)
 
     #Buttons
     #Update
     b1 = Button(window, text='Update', width=12, command=update_command)
     b1.grid(row=7, column=1, pady=(0,10))
     #Delete
-    b2 = Button(window, text='Delete', width=12)
+    b2 = Button(window, text='Delete', width=12, command=delete_command)
     b2.grid(row=7, column=3, pady=(0,10))
     #View Records
     b3 = Button(window, text='View Records', command=view_command)
