@@ -4,9 +4,9 @@ import sqlite3
 from tkinter import *
 from tkinter import messagebox
 import os
+from matplotlib.pyplot import connect
 from numpy import record
 import pandas as pd
-import re
 
 root = Tk()
 root.title('Request Manager')
@@ -18,10 +18,6 @@ x = (ws/2) - (w/2)
 y = (hs/2) - (h/2)
 root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 root.columnconfigure(0,weight=1) # column weight 100% 
-# root.rowconfigure(0, weight=1) 
-# root.rowconfigure(1, weight=1) # change weight to 4
-# root.rowconfigure(2, weight=1)
-# root.rowconfigure(3, weight=1)
 app_menubar = Menu(root)
 root.config(menu=app_menubar)
 
@@ -141,14 +137,6 @@ def select_statement():
     conn.commit()
     #Close connection to DB
     conn.close()
-
-def update_statement():
-    conn = sqlite3.connect('request.db')
-    c = conn.cursor()
-    c.execute(''' Update ''')
-
-def delete_statement():
-    pass
 
 def initialize_mr_app():
     window = Toplevel(root)
@@ -341,31 +329,64 @@ def initialize_mr_app():
 
     listbox_.bind('<<ListboxSelect>>', get_selected_record)
 
-    # def find_record_id():
-    #     print(clicked_Service.get())
-    #     conn =  sqlite3.connect('request.db')
-    #     c = conn.cursor()
-    #     c.execute(''' Select id from request_entry where city_service = ? and urgency = ? and state = ? and caller = ?
-    #         and email = ? and phone = ? and completed_date = ? and description = ?''',(
-    #         clicked_Service.get().strip(),clicked_urgent.get().strip(),clicked_state.get().strip(),
-    #         manage_request_Name.get().strip(), manage_request_Email.get().strip(), manage_request_Phone.get().strip(), 
-    #         manage_request_Completion.get().strip(), request_description.get('1.0', END).strip()
-    #     ))
-    #     my_id = c.fetchone()
-    #     print(c.lastrowid)
-    #     conn.commit()
-    #     conn.close()
-    #     print(my_id)
-    #     return my_id
+    def get_record_id():
+        #Connect to DB
+        conn = sqlite3.connect('request.db')
+        #Set Cursor
+        c = conn.cursor()
+        c.execute(f'''SELECT id FROM request_entry where city_service={clicked_Service.get().strip()} and urgency={clicked_urgent.get().strip()}
+                    and state={clicked_state.get().strip()} and caller={manage_request_Name.get().strip()} and email={manage_request_Email.get().strip()} 
+                    and phone={manage_request_Phone.get().strip()} and completed_date={manage_request_Completion.get().strip()} 
+                    and description={request_description.get('1.0', END).strip()};''') 
+        #Retrieve ID
+        record_id = c.fetchone()
+        conn.commit()
+        conn.close()  
+        print(clicked_Service.get().strip(),
+                    clicked_urgent.get().strip(),clicked_state.get().strip(), manage_request_Name.get().strip(), 
+                    manage_request_Email.get().strip(), manage_request_Phone.get().strip(), 
+                    manage_request_Completion.get().strip(), request_description.get('1.0', END).strip())
+        print(record_id)
+        return record_id
 
     def delete_command():
-        print(root.focus_get())
-        if str(root.focus_get()) != '.!toplevel.!listbox':
-            print('poo')
-        else: 
-            print('yay')
-            # print('Nothing is selected.')
-    
+        try:
+            rcd_id = get_record_id()
+            rcd_id = str(rcd_id).strip('(,)')
+            does_user_consent = messagebox.askyesno(title='Delete Record', message='Are you sure you want to delete this record?', parent=window)
+            print(does_user_consent)
+            print(rcd_id)
+            if does_user_consent == True:
+                conn = sqlite3.connect('request.db')
+                c = conn.cursor()
+                c.execute(f'DELETE FROM request_entry WHERE id={rcd_id};')
+                conn.commit()
+                conn.close()
+                #Service Option Reset
+                clicked_Service.set(service_options[0])
+                #Urgency options reset
+                clicked_urgent.set(urgency_options[0])
+                #State Options Reset
+                clicked_state.set(state_options[0])
+                #Name
+                manage_request_Name.delete(0, END)
+                #Email
+                manage_request_Email.delete(0, END)
+                #Phone
+                manage_request_Phone.delete(0, END)
+                #Completion Date
+                manage_request_Completion.delete(0, END)
+                #Request Description
+                request_description.delete('1.0', END)
+                # print(root.focus_get())
+                # if str(root.focus_get()) != '.!toplevel.!listbox':
+                #     print('poo')
+                # else: 
+                #     print('yay')  
+            else:
+                messagebox.showinfo(title='Delete Record', message='Record was NOT deleted.', parent=window)
+        except IndexError:
+            messagebox.showerror(title='Delete Error', message="You're trying to delete an unselected record!", parent=window)
 
     def update_command():
 
@@ -397,7 +418,7 @@ def initialize_mr_app():
             #Request Description
             request_description.delete('1.0', END)
         except IndexError:
-            messagebox.showwarning (title='Update Error', message="You don't have a record selected to update!", parent=window)
+            messagebox.showerror(title='Update Error', message="You don't have a record selected to update!", parent=window)
 
     #Buttons
     #Update
@@ -418,8 +439,6 @@ def initialize_mr_app():
         rows = cur.fetchall()
         conn.close()
         return rows
-
-    # window.mainloop()
 
 def doesTableExist():
     #Create DB/Connect to DB
@@ -456,8 +475,6 @@ def insertIntoTable():
     if Caller_T.get() == '' or Email_T.get() == '' or Phone_T.get() == '' or Description_T.get('1.0', END) == '':
         messagebox.showinfo('Message', 'You have not filled in all fields.')
     else:
-        # current_time = datetime.now()
-        # formatted_DateTime = current_time.strftime("%d/%m/%Y %H:%M:%S")
         #Create DB/Connect to DB
         conn = sqlite3.connect('request.db')
         #Create Cursor
