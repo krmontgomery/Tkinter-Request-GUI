@@ -263,7 +263,7 @@ def initialize_mr_app():
     def get_selected_record(event):
         index = listbox_.curselection()[0]
         selected_record = listbox_.get(index)
-        print(f'{selected_record[1]} / {selected_record[2]} / {selected_record[3]}')
+        print(f'{str(selected_record[0])} / {selected_record[1]} / {selected_record[2]} / {selected_record[3]}')
         #Service Option menu
         service_options = [
         'Police',
@@ -330,23 +330,19 @@ def initialize_mr_app():
     listbox_.bind('<<ListboxSelect>>', get_selected_record)
 
     def get_record_id():
+        index = listbox_.curselection()[0]
+        selected_record = listbox_.get(index)
+        print(selected_record[0], 'get_record_id, selected_record[0]')
         #Connect to DB
         conn = sqlite3.connect('request.db')
         #Set Cursor
-        c = conn.cursor()
-        c.execute(f'''SELECT id FROM request_entry where city_service={clicked_Service.get().strip()} and urgency={clicked_urgent.get().strip()}
-                    and state={clicked_state.get().strip()} and caller={manage_request_Name.get().strip()} and email={manage_request_Email.get().strip()} 
-                    and phone={manage_request_Phone.get().strip()} and completed_date={manage_request_Completion.get().strip()} 
-                    and description={request_description.get('1.0', END).strip()};''') 
-        #Retrieve ID
+        c = conn.cursor()        
+        c.execute(f'''SELECT id FROM request_entry where id = {selected_record[0]};''')       
+        # #Retrieve ID
         record_id = c.fetchone()
         conn.commit()
         conn.close()  
-        print(clicked_Service.get().strip(),
-                    clicked_urgent.get().strip(),clicked_state.get().strip(), manage_request_Name.get().strip(), 
-                    manage_request_Email.get().strip(), manage_request_Phone.get().strip(), 
-                    manage_request_Completion.get().strip(), request_description.get('1.0', END).strip())
-        print(record_id)
+        
         return record_id
 
     def delete_command():
@@ -389,36 +385,40 @@ def initialize_mr_app():
             messagebox.showerror(title='Delete Error', message="You're trying to delete an unselected record!", parent=window)
 
     def update_command():
-
-        try:
-            me_id = listbox_.curselection()[0] + 1
-            conn = sqlite3.connect('request.db')
-            c = conn.cursor()
-            c.execute('''UPDATE request_entry SET city_service=?, urgency=?, state=?,
-                        caller=?, email=?, phone=?, completed_date=?, description=? WHERE id=?''',
-                    (clicked_Service.get().strip(),clicked_urgent.get().strip(),clicked_state.get().strip(),
-                        manage_request_Name.get().strip(), manage_request_Email.get().strip(), manage_request_Phone.get().strip(), 
-                        manage_request_Completion.get().strip(), request_description.get('1.0', END).strip(), me_id))
-            conn.commit()
-            conn.close()
-            #Service Option Reset
-            clicked_Service.set(service_options[0])
-            #Urgency options reset
-            clicked_urgent.set(urgency_options[0])
-            #State Options Reset
-            clicked_state.set(state_options[0])
-            #Name
-            manage_request_Name.delete(0, END)
-            #Email
-            manage_request_Email.delete(0, END)
-            #Phone
-            manage_request_Phone.delete(0, END)
-            #Completion Date
-            manage_request_Completion.delete(0, END)
-            #Request Description
-            request_description.delete('1.0', END)
-        except IndexError:
-            messagebox.showerror(title='Update Error', message="You don't have a record selected to update!", parent=window)
+        if messagebox.askyesno(title='Update Record', message='Are you sure you want to update this record?', parent=window):
+            try:
+                index = listbox_.curselection()[0]
+                selected_record = listbox_.get(index)
+                conn = sqlite3.connect('request.db')
+                c = conn.cursor()
+                c.execute('''UPDATE request_entry SET city_service=?, urgency=?, state=?,
+                            caller=?, email=?, phone=?, completed_date=?, description=? WHERE id=?''',
+                        (clicked_Service.get().strip(),clicked_urgent.get().strip(),clicked_state.get().strip(),
+                            manage_request_Name.get().strip(), manage_request_Email.get().strip(), manage_request_Phone.get().strip(), 
+                            manage_request_Completion.get().strip(), request_description.get('1.0', END).strip(), selected_record[0]))
+                conn.commit()
+                conn.close()
+                #Service Option Reset
+                clicked_Service.set(service_options[0])
+                #Urgency options reset
+                clicked_urgent.set(urgency_options[0])
+                #State Options Reset
+                clicked_state.set(state_options[0])
+                #Name
+                manage_request_Name.delete(0, END)
+                #Email
+                manage_request_Email.delete(0, END)
+                #Phone
+                manage_request_Phone.delete(0, END)
+                #Completion Date
+                manage_request_Completion.delete(0, END)
+                #Request Description
+                request_description.delete('1.0', END)
+                messagebox.showinfo(title='Update Record', message='Record was successfully updated!', parent=window)
+            except IndexError:
+                messagebox.showerror(title='Update Error', message="You don't have a record selected to update!", parent=window)
+        else:
+            messagebox.showinfo(title='Update Record', message='Record was not updated.')
 
     #Buttons
     #Update
