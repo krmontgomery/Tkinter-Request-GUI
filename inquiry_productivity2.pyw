@@ -7,6 +7,7 @@ import os
 from matplotlib.pyplot import connect
 from numpy import record
 import pandas as pd
+from send_reminder_email import send_email
 
 root = Tk()
 root.title('Request Manager')
@@ -521,6 +522,18 @@ def insertIntoTable():
             parent_sub = os.path.join(report_dir, request_foldername)
             os.mkdir(parent_sub)
         messagebox.showinfo('Message', "Entry was successful, fields will be cleared.")
+        #Send Email - Dictionary import to function
+        requestEntryDictionary = {
+                'Service': clicked_serv.get(),
+                'Urgency': clicked_urg.get(),
+                'Request State': clicked_stat.get(),
+                'Name': Caller_T.get(),
+                'Email': Email_T.get(),
+                'Phone': Phone_T.get(),
+                'Completed by Date': completed_Date_input.get(),
+                'Request Description':Description_T.get('1.0', END),
+        }
+        send_email(requestEntryDictionary)
         #Clear fields
         #Service
         clicked_serv.set(service_options[0])

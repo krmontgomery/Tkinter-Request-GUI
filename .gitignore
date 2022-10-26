@@ -1,6 +1,7 @@
 # Folders
 **/Reports
 **/Request_Documentation
+**/__pycache__
 # Files
 send_reminder_email.py
 ms-outlook-task.py
