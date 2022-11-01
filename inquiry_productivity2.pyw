@@ -4,7 +4,6 @@ import sqlite3
 from tkinter import *
 from tkinter import messagebox
 import os
-from matplotlib.pyplot import connect
 from numpy import record
 import pandas as pd
 from send_reminder_email import send_email
@@ -429,7 +428,7 @@ def initialize_mr_app():
     b2 = Button(window, text='Delete', width=12, command=delete_command)
     b2.grid(row=7, column=3, pady=(0,10))
     #View Records
-    b3 = Button(window, text='View Records', command=view_command)
+    b3 = Button(window, text='View Records/Refresh', command=view_command)
     b3.grid(row=7, column=6, columnspan=2)
 
 
