@@ -21,6 +21,7 @@ root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 root.columnconfigure(0,weight=1) # column weight 100% 
 app_menubar = Menu(root)
 root.config(menu=app_menubar)
+root.configure(bg='#1D0E32')
 
 current_time = datetime.now()
 formatted_date = current_time.strftime("%d-%m-%Y")
@@ -114,6 +115,15 @@ frame_bottom = Frame(root,)
 frame_bottom_one = Frame(root,)
 frame_bottom_two = Frame(root,)
 frame_bottom_three = Frame(root,)
+#Set application backgroun color
+frame_top.configure(bg='#1D0E32')
+frame_mid_one.configure(bg='#1D0E32')
+frame_mid_two.configure(bg='#1D0E32')
+frame_mid_three.configure(bg='#1D0E32')
+frame_bottom.configure(bg='#1D0E32')
+frame_bottom_one.configure(bg='#1D0E32')
+frame_bottom_two.configure(bg='#1D0E32')
+frame_bottom_three.configure(bg='#1D0E32')
 #Frame Grid
 frame_top.grid(row=0, column=0, sticky='WENS')
 frame_mid_one.grid(row=1, column=0, sticky='WENS')
@@ -241,7 +251,6 @@ def initialize_mr_app():
     request_descriptionL = Label(window, text='Request Description:')
     request_descriptionL.grid(row=4, column=1, columnspan=3)
 
-    name_text7 = StringVar()
     request_description = Text(window, wrap=WORD, height=10, width=50)
     request_description.grid(row=5, column=1, columnspan=3)
 
@@ -564,7 +573,7 @@ frame_top.columnconfigure(1, weight=1)
 frame_top.columnconfigure(2, weight=1)
 frame_top.columnconfigure(3, weight=1)
 #Service
-Service_L = Label(frame_top, text='Service:')
+Service_L = Label(frame_top, text='Service:',fg='White', bg='#1D0E32', font=11)
 Service_L.grid(row=0, column=0,pady=10, sticky='E')
 service_options = [
     ' Police',
@@ -579,6 +588,7 @@ service_options = [
 clicked_serv = StringVar()
 clicked_serv.set(service_options[0])
 Service_OM = OptionMenu(frame_top, clicked_serv, *service_options)
+Service_OM.configure(fg='White', bg='#1D0E32', font=11)
 Service_OM.grid(
     row=0, 
     column=1,
@@ -587,7 +597,7 @@ Service_OM.grid(
     sticky='W'
     )
 #Task
-Urgency_L = Label(frame_top,text="Urgency:")
+Urgency_L = Label(frame_top,text="Urgency:",fg='White', bg='#1D0E32', font=11)
 Urgency_L.grid(row=0,column=2, sticky='E')
 urgency_options = [
     ' Low',
@@ -598,6 +608,7 @@ urgency_options = [
 clicked_urg = StringVar()
 clicked_urg.set(urgency_options[0])
 Urgency_OM = OptionMenu(frame_top, clicked_urg, *urgency_options)
+Urgency_OM.configure(fg='White', bg='#1D0E32', font=11)
 Urgency_OM.grid( 
     row=0,
     column=3,
@@ -610,7 +621,7 @@ frame_mid_one.columnconfigure(1,weight=3)
 frame_mid_one.columnconfigure(2,weight=3)
 frame_mid_one.columnconfigure(3,weight=1)
 #State/Priority
-State_L = Label(frame_mid_one,text="State:")
+State_L = Label(frame_mid_one,text="State:",fg='White', bg='#1D0E32', font=11)
 State_L.grid(row=1,column=0, sticky='E')
 state_options = [
     ' New',
@@ -620,6 +631,7 @@ state_options = [
 clicked_stat = StringVar()
 clicked_stat.set(state_options[0])
 State_OM = OptionMenu(frame_mid_one, clicked_stat, *state_options)
+State_OM.configure(fg='White', bg='#1D0E32', font=11)
 State_OM.grid( 
     row=1,
     column=1,
@@ -627,7 +639,7 @@ State_OM.grid(
     sticky='W'
     )
 #Caller
-Caller_L = Label(frame_mid_one,text='Caller:')
+Caller_L = Label(frame_mid_one,text='Caller:',fg='White', bg='#1D0E32', font=11)
 Caller_L.grid(row=1,column=2, sticky="WE")
 Caller_T = Entry(frame_mid_one, width=25)
 Caller_T.grid(row=1,column=3, sticky="W")
@@ -637,7 +649,7 @@ frame_mid_two.columnconfigure(1,weight=1)
 frame_mid_two.columnconfigure(2,weight=1)
 frame_mid_two.columnconfigure(3,weight=1)
 #Email
-Email_L = Label(frame_mid_two,text='Email:')
+Email_L = Label(frame_mid_two,text='Email:',fg='White', bg='#1D0E32', font=11)
 Email_L.grid(row=2,column=0, sticky="E")
 Email_T = Entry(frame_mid_two, width=25)
 Email_T.grid(row=2,column=1, sticky="W")
@@ -647,7 +659,7 @@ frame_mid_three.columnconfigure(1,weight=1)
 frame_mid_three.columnconfigure(2,weight=1)
 frame_mid_three.columnconfigure(3,weight=1)
 #Phone Number
-Phone_L = Label(frame_mid_two,text='Phone:')
+Phone_L = Label(frame_mid_two,text='Phone:',fg='White', bg='#1D0E32', font=11)
 Phone_L.grid(row=2,column=2, pady=10, sticky="W")
 Phone_T = Entry(frame_mid_two, width=25)
 Phone_T.grid(row=2,column=3, pady=10, sticky='W')
@@ -657,7 +669,7 @@ frame_bottom.columnconfigure(1,weight=1)
 frame_bottom.columnconfigure(2,weight=1)
 frame_bottom.columnconfigure(3,weight=1)
 #Completion Date Label ---------------------------------------
-completed_Date_L = Label(frame_bottom, text='Completion Date:', padx=15)
+completed_Date_L = Label(frame_bottom, text='Completion Date:', padx=15,fg='White', bg='#1D0E32', font=11)
 completed_Date_L.grid(row=4, column=1, pady=10, sticky='E')
 #Completed Date ----------------------------------------------
 completed_Date_input = Entry(frame_bottom, width=25)
@@ -668,7 +680,7 @@ frame_bottom_one.columnconfigure(1,weight=1)
 frame_bottom_one.columnconfigure(2,weight=1)
 frame_bottom_one.columnconfigure(3,weight=1)
 #Description Label
-Description_L = Label(frame_bottom_one,text='Request Description:', padx=15)
+Description_L = Label(frame_bottom_one,text='Request Description:', padx=15,fg='White', bg='#1D0E32', font=11)
 Description_L.grid(row=4,column=0, columnspan=0+4, pady=10)
 #Frame Bottom Two -------------------------------------------------
 frame_bottom_two.columnconfigure(0,weight=1)
@@ -692,7 +704,7 @@ def button_func():
     else:
         messagebox.showinfo("Message", "Table didn't exist. Has been created.")
 #Action Button
-Action_button_L = Button(frame_bottom_three,text='Confirm Entry', command=button_func, padx=15)
+Action_button_L = Button(frame_bottom_three,text='Confirm Entry', command=button_func, padx=15, bg='#00db84')
 Action_button_L.grid(row=5,column=0, columnspan=0+4, pady=10)
 
 root.mainloop()
