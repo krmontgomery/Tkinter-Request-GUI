@@ -63,7 +63,7 @@ def search_records():
         conn.commit()
         #Close connection
         conn.close()
-    results_area = Text(newWindow, wrap=WORD)
+    results_area = Text(newWindow, wrap=WORD, insertbackground="white")
     results_area.configure(fg='White', bg='#133e63')
     results_area.grid(row=i,sticky='WENS')
     search_table = Button(newWindow, text='Search', command=select_all_records)
@@ -231,7 +231,7 @@ def initialize_mr_app():
     manage_request_NameL.grid(row=1, column=2, sticky='EW')
 
     mr_name = StringVar()
-    manage_request_Name = Entry(window, textvariable=mr_name, fg='white', bg='#133e63')
+    manage_request_Name = Entry(window, textvariable=mr_name, fg='white', bg='#133e63', insertbackground="white")
     manage_request_Name.grid(row=1, column=3,sticky='W')
     #Email
     manage_request_EmailL = Label(window, text='Email:')
@@ -239,7 +239,7 @@ def initialize_mr_app():
     manage_request_EmailL.grid(row=2, column=0, padx=(10, 0))
 
     mr_email = StringVar()
-    manage_request_Email = Entry(window, textvariable=mr_email, fg='white', bg='#133e63')
+    manage_request_Email = Entry(window, textvariable=mr_email, fg='white', bg='#133e63', insertbackground="white")
     manage_request_Email.grid(row=2, column=1,sticky='W')
     #Phone
     manage_request_PhoneL = Label(window, text='Phone:')
@@ -247,7 +247,7 @@ def initialize_mr_app():
     manage_request_PhoneL.grid(row=2, column=2,sticky='EW')
 
     mr_phone = StringVar()
-    manage_request_Phone = Entry(window, textvariable=mr_phone, fg='white', bg='#133e63')
+    manage_request_Phone = Entry(window, textvariable=mr_phone, fg='white', bg='#133e63', insertbackground="white")
     manage_request_Phone.grid(row=2, column=3,sticky='W')
     #Completion Date
     manage_request_CompletionL = Label(window, text='Completion Date:')
@@ -255,22 +255,22 @@ def initialize_mr_app():
     manage_request_CompletionL.grid(row=3, column=1)
 
     mr_CompletionDate = StringVar()
-    manage_request_Completion = Entry(window, textvariable=mr_CompletionDate, fg='white', bg='#133e63')
+    manage_request_Completion = Entry(window, textvariable=mr_CompletionDate, fg='white', bg='#133e63', insertbackground="white")
     manage_request_Completion.grid(row=3, column=2)
     #Request Description
     request_descriptionL = Label(window, text='Request Description:')
     request_descriptionL.configure(fg='White', bg='#042440', font=11)
     request_descriptionL.grid(row=4, column=1, columnspan=3)
 
-    request_description = Text(window, wrap=WORD, height=10, width=50, fg='white', bg='#133e63')
+    request_description = Text(window, wrap=WORD, height=10, width=50, fg='white', bg='#133e63', insertbackground="white")
     request_description.grid(row=5, column=1, columnspan=3)
 
     #Show records Widget
-    listbox_ = Listbox(window, height=20, width=59, exportselection=0, fg='white', bg='#133e63')
+    listbox_ = Listbox(window, height=20, width=59, exportselection=0, fg='white', bg='#133e63', highlightthickness=0)
     listbox_.grid(row=0, column=6, rowspan=6, columnspan=2, padx=(0,10), pady=(10,0))
     #Scrollbar
     scrl = Scrollbar(window,)
-    scrl.grid(row=0, column=5, sticky='ns', rowspan=6, padx=(10, 0), pady=(10,0))
+    scrl.grid(row=0, column=5, sticky='ns', rowspan=6, padx=(10, 0), pady=(10,0),)
     #Attachment
     listbox_.configure(yscrollcommand=scrl.set)
     scrl.configure(command=listbox_.yview)
@@ -647,7 +647,7 @@ State_OM.grid(
 #Caller
 Caller_L = Label(frame_mid_one,text='Caller:',fg='White', bg='#042440', font=11)
 Caller_L.grid(row=1,column=2, sticky="WE")
-Caller_T = Entry(frame_mid_one, width=25)
+Caller_T = Entry(frame_mid_one, width=25, insertbackground="white")
 Caller_T.configure(fg='White', bg='#133e63')
 Caller_T.grid(row=1,column=3, sticky="W")
 #Frame Mid Two----------------------------------------------------
@@ -658,7 +658,7 @@ frame_mid_two.columnconfigure(3,weight=1)
 #Email
 Email_L = Label(frame_mid_two,text='Email:',fg='White', bg='#042440', font=11)
 Email_L.grid(row=2,column=0, sticky="E")
-Email_T = Entry(frame_mid_two, width=25)
+Email_T = Entry(frame_mid_two, width=25, insertbackground="white")
 Email_T.configure(fg='White', bg='#133e63')
 Email_T.grid(row=2,column=1, sticky="W")
 #Frame Mid Three -------------------------------------------------
@@ -669,7 +669,7 @@ frame_mid_three.columnconfigure(3,weight=1)
 #Phone Number
 Phone_L = Label(frame_mid_two,text='Phone:',fg='White', bg='#042440', font=11)
 Phone_L.grid(row=2,column=2, pady=10, sticky="W")
-Phone_T = Entry(frame_mid_two, width=25)
+Phone_T = Entry(frame_mid_two, width=25, insertbackground="white")
 Phone_T.configure(fg='White', bg='#133e63')
 Phone_T.grid(row=2,column=3, pady=10, sticky='W')
 #Frame Bottom -------------------------------------------------
@@ -681,7 +681,7 @@ frame_bottom.columnconfigure(3,weight=1)
 completed_Date_L = Label(frame_bottom, text='Completion Date:', padx=15,fg='White', bg='#042440', font=11)
 completed_Date_L.grid(row=4, column=1, pady=10, sticky='E')
 #Completed Date ----------------------------------------------
-completed_Date_input = Entry(frame_bottom, width=25)
+completed_Date_input = Entry(frame_bottom, width=25, insertbackground="white")
 completed_Date_input.configure(fg='White', bg='#133e63')
 completed_Date_input.grid(row=4, column=2, sticky='W')
 #Frame Bottom One -------------------------------------------------
@@ -698,7 +698,7 @@ frame_bottom_two.columnconfigure(1,weight=1)
 frame_bottom_two.columnconfigure(2,weight=1)
 frame_bottom_two.columnconfigure(3,weight=1)
 #Description
-Description_T = Text(frame_bottom_two, wrap=WORD, height=16)
+Description_T = Text(frame_bottom_two, wrap=WORD, height=16, insertbackground="white")
 Description_T.configure(fg='White', bg='#133e63')
 Description_T.grid(row=4,column=0, pady=10, padx=20)
 #Frame Bottom Threhree-------------------------------------------------
