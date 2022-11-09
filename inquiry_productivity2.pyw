@@ -1,11 +1,8 @@
 from datetime import datetime, date
-from operator import index
 import sqlite3
 from tkinter import *
 from tkinter import messagebox
 import os
-from matplotlib.pyplot import connect
-from numpy import record
 import pandas as pd
 from send_reminder_email import send_email
 
@@ -21,7 +18,7 @@ root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 root.columnconfigure(0,weight=1) # column weight 100% 
 app_menubar = Menu(root)
 root.config(menu=app_menubar)
-root.configure(bg='#1D0E32')
+root.configure(bg='#042440')
 
 current_time = datetime.now()
 formatted_date = current_time.strftime("%d-%m-%Y")
@@ -42,6 +39,7 @@ def search_records():
     y = (hs/2) - (h/2)
     newWindow.geometry('%dx%d+%d+%d' % (w, h, x, y))
     newWindow.columnconfigure(0, weight=1)
+    newWindow.configure(bg='#042440')
     i=1
     def select_all_records():
         results_area.delete('1.0',END)
@@ -116,14 +114,14 @@ frame_bottom_one = Frame(root,)
 frame_bottom_two = Frame(root,)
 frame_bottom_three = Frame(root,)
 #Set application backgroun color
-frame_top.configure(bg='#1D0E32')
-frame_mid_one.configure(bg='#1D0E32')
-frame_mid_two.configure(bg='#1D0E32')
-frame_mid_three.configure(bg='#1D0E32')
-frame_bottom.configure(bg='#1D0E32')
-frame_bottom_one.configure(bg='#1D0E32')
-frame_bottom_two.configure(bg='#1D0E32')
-frame_bottom_three.configure(bg='#1D0E32')
+frame_top.configure(bg='#042440')
+frame_mid_one.configure(bg='#042440')
+frame_mid_two.configure(bg='#042440')
+frame_mid_three.configure(bg='#042440')
+frame_bottom.configure(bg='#042440')
+frame_bottom_one.configure(bg='#042440')
+frame_bottom_two.configure(bg='#042440')
+frame_bottom_three.configure(bg='#042440')
 #Frame Grid
 frame_top.grid(row=0, column=0, sticky='WENS')
 frame_mid_one.grid(row=1, column=0, sticky='WENS')
@@ -160,9 +158,11 @@ def initialize_mr_app():
     y = (hs/2) - (h/2)
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
     window.columnconfigure(0, weight=1)
+    window.configure(bg='#042440')
 
     #Service select
     manage_request_ServiceL = Label(window, text='Service:')
+    manage_request_ServiceL.configure(fg='White', bg='#042440', font=11)
     manage_request_ServiceL.grid(row=0, column=0, pady=(10, 0), padx=(10, 0))
     options = [
         'Police',
@@ -177,6 +177,7 @@ def initialize_mr_app():
     clicked_Service = StringVar()
     clicked_Service.set('Police')
     manage_request_Service = OptionMenu(window, clicked_Service, *options)
+    manage_request_Service.configure(fg='White', bg='#105c9e', font=11, highlightthickness=0)
     manage_request_Service.grid(
         row=0, 
         column=1,
@@ -185,6 +186,7 @@ def initialize_mr_app():
         )
     #Urgency Select
     manage_request_UrgencyL = Label(window, text='Urgency:')
+    manage_request_UrgencyL.configure(fg='White', bg='#042440', font=11)
     manage_request_UrgencyL.grid(row=0, column=2, pady=(10, 0), sticky='EW')
 
     urgency_options = [
@@ -196,6 +198,7 @@ def initialize_mr_app():
     clicked_urgent = StringVar()
     clicked_urgent.set(' Low')
     Urgency_OM = OptionMenu(window, clicked_urgent, *urgency_options)
+    Urgency_OM.configure(fg='White', bg='#105c9e', font=11, highlightthickness=0)
     Urgency_OM.grid( 
         row=0,
         column=3,
@@ -204,6 +207,7 @@ def initialize_mr_app():
         )
     #Request State
     manage_request_StateL = Label(window, text='State:')
+    manage_request_StateL.configure(fg='White', bg='#042440', font=11)
     manage_request_StateL.grid(row=1, column=0, padx=(10, 0))
 
     state_options = [
@@ -214,6 +218,7 @@ def initialize_mr_app():
     clicked_state = StringVar()
     clicked_state.set(' New')
     manage_request_State = OptionMenu(window, clicked_state, *state_options)
+    manage_request_State.configure(fg='White', bg='#105c9e', font=11, highlightthickness=0)
     manage_request_State.grid( 
         row=1,
         column=1,
@@ -221,41 +226,46 @@ def initialize_mr_app():
         )
     #Name
     manage_request_NameL = Label(window, text='Name:')
+    manage_request_NameL.configure(fg='White', bg='#042440', font=11)
     manage_request_NameL.grid(row=1, column=2, sticky='EW')
 
     mr_name = StringVar()
-    manage_request_Name = Entry(window, textvariable=mr_name)
+    manage_request_Name = Entry(window, textvariable=mr_name, fg='white', bg='#133e63')
     manage_request_Name.grid(row=1, column=3,sticky='W')
     #Email
     manage_request_EmailL = Label(window, text='Email:')
+    manage_request_EmailL.configure(fg='White', bg='#042440', font=11)
     manage_request_EmailL.grid(row=2, column=0, padx=(10, 0))
 
     mr_email = StringVar()
-    manage_request_Email = Entry(window, textvariable=mr_email)
+    manage_request_Email = Entry(window, textvariable=mr_email, fg='white', bg='#133e63')
     manage_request_Email.grid(row=2, column=1,sticky='W')
     #Phone
     manage_request_PhoneL = Label(window, text='Phone:')
+    manage_request_PhoneL.configure(fg='White', bg='#042440', font=11)
     manage_request_PhoneL.grid(row=2, column=2,sticky='EW')
 
     mr_phone = StringVar()
-    manage_request_Phone = Entry(window, textvariable=mr_phone)
+    manage_request_Phone = Entry(window, textvariable=mr_phone, fg='white', bg='#133e63')
     manage_request_Phone.grid(row=2, column=3,sticky='W')
     #Completion Date
     manage_request_CompletionL = Label(window, text='Completion Date:')
+    manage_request_CompletionL.configure(fg='White', bg='#042440', font=11)
     manage_request_CompletionL.grid(row=3, column=1)
 
     mr_CompletionDate = StringVar()
-    manage_request_Completion = Entry(window, textvariable=mr_CompletionDate)
+    manage_request_Completion = Entry(window, textvariable=mr_CompletionDate, fg='white', bg='#133e63')
     manage_request_Completion.grid(row=3, column=2)
     #Request Description
     request_descriptionL = Label(window, text='Request Description:')
+    request_descriptionL.configure(fg='White', bg='#042440', font=11)
     request_descriptionL.grid(row=4, column=1, columnspan=3)
 
-    request_description = Text(window, wrap=WORD, height=10, width=50)
+    request_description = Text(window, wrap=WORD, height=10, width=50, fg='white', bg='#133e63')
     request_description.grid(row=5, column=1, columnspan=3)
 
     #Show records Widget
-    listbox_ = Listbox(window, height=20, width=59, exportselection=0)
+    listbox_ = Listbox(window, height=20, width=59, exportselection=0, fg='white', bg='#133e63')
     listbox_.grid(row=0, column=6, rowspan=6, columnspan=2, padx=(0,10), pady=(10,0))
     #Scrollbar
     scrl = Scrollbar(window,)
@@ -285,8 +295,10 @@ def initialize_mr_app():
         'Trash',
         'Citizen Inquiry',
         ]
+        manage_request_Service.destroy()
         clicked_Service.set(selected_record[1])
         manage_Service = OptionMenu(window, clicked_Service, *service_options)
+        manage_Service.configure(fg='White', bg='#105c9e', font=11, highlightthickness=0)
         manage_Service.grid(
             row=0, 
             column=1,
@@ -302,6 +314,7 @@ def initialize_mr_app():
         ]
         clicked_urgent.set(selected_record[2])
         manage_request_urgency = OptionMenu(window, clicked_urgent, *urgency_options)
+        manage_request_urgency.configure(fg='White', bg='#105c9e', font=11, highlightthickness=0)
         manage_request_urgency.grid( 
             row=0,
             column=3,
@@ -316,6 +329,7 @@ def initialize_mr_app():
         ]
         clicked_state.set(selected_record[3])
         manage_request_State2 = OptionMenu(window, clicked_state, *state_options)
+        manage_request_State2.configure(fg='White', bg='#105c9e', font=11, highlightthickness=0)
         manage_request_State2.grid( 
             row=1,
             column=1,
@@ -433,9 +447,11 @@ def initialize_mr_app():
     #Buttons
     #Update
     b1 = Button(window, text='Update', width=12, command=update_command)
+    b1.configure(bg='#00db84')
     b1.grid(row=7, column=1, pady=(0,10))
     #Delete
     b2 = Button(window, text='Delete', width=12, command=delete_command)
+    b2.configure(bg='#d65454')
     b2.grid(row=7, column=3, pady=(0,10))
     #View Records
     b3 = Button(window, text='View Records', command=view_command)
@@ -556,24 +572,13 @@ def insertIntoTable():
         completed_Date_input.delete(0, END)
         Description_T.delete('1.0', END)
 
-def select_all_records():
-    #Create DB/Connect to DB
-    conn = sqlite3.connect('request.db')
-    #Create Cursor
-    c = conn.cursor()
-    r_set = c.execute('Select * from request_entry')
-    #Commit Changes
-    conn.commit()
-    #Close connection
-    conn.close()
-
 #Frame Top 
 frame_top.columnconfigure(0, weight=1)
 frame_top.columnconfigure(1, weight=1)
 frame_top.columnconfigure(2, weight=1)
 frame_top.columnconfigure(3, weight=1)
 #Service
-Service_L = Label(frame_top, text='Service:',fg='White', bg='#1D0E32', font=11)
+Service_L = Label(frame_top, text='Service:',fg='White', bg='#042440', font=11)
 Service_L.grid(row=0, column=0,pady=10, sticky='E')
 service_options = [
     ' Police',
@@ -588,7 +593,7 @@ service_options = [
 clicked_serv = StringVar()
 clicked_serv.set(service_options[0])
 Service_OM = OptionMenu(frame_top, clicked_serv, *service_options)
-Service_OM.configure(fg='White', bg='#1D0E32', font=11)
+Service_OM.configure(fg='White', bg='#105c9e', font=11, highlightthickness=0)
 Service_OM.grid(
     row=0, 
     column=1,
@@ -597,7 +602,7 @@ Service_OM.grid(
     sticky='W'
     )
 #Task
-Urgency_L = Label(frame_top,text="Urgency:",fg='White', bg='#1D0E32', font=11)
+Urgency_L = Label(frame_top,text="Urgency:",fg='White', bg='#042440', font=11)
 Urgency_L.grid(row=0,column=2, sticky='E')
 urgency_options = [
     ' Low',
@@ -608,7 +613,7 @@ urgency_options = [
 clicked_urg = StringVar()
 clicked_urg.set(urgency_options[0])
 Urgency_OM = OptionMenu(frame_top, clicked_urg, *urgency_options)
-Urgency_OM.configure(fg='White', bg='#1D0E32', font=11)
+Urgency_OM.configure(fg='White', bg='#105c9e', font=11, highlightthickness=0)
 Urgency_OM.grid( 
     row=0,
     column=3,
@@ -621,7 +626,7 @@ frame_mid_one.columnconfigure(1,weight=3)
 frame_mid_one.columnconfigure(2,weight=3)
 frame_mid_one.columnconfigure(3,weight=1)
 #State/Priority
-State_L = Label(frame_mid_one,text="State:",fg='White', bg='#1D0E32', font=11)
+State_L = Label(frame_mid_one,text="State:",fg='White', bg='#042440', font=11)
 State_L.grid(row=1,column=0, sticky='E')
 state_options = [
     ' New',
@@ -631,7 +636,7 @@ state_options = [
 clicked_stat = StringVar()
 clicked_stat.set(state_options[0])
 State_OM = OptionMenu(frame_mid_one, clicked_stat, *state_options)
-State_OM.configure(fg='White', bg='#1D0E32', font=11)
+State_OM.configure(fg='White', bg='#105c9e', font=11, highlightthickness=0)
 State_OM.grid( 
     row=1,
     column=1,
@@ -639,9 +644,10 @@ State_OM.grid(
     sticky='W'
     )
 #Caller
-Caller_L = Label(frame_mid_one,text='Caller:',fg='White', bg='#1D0E32', font=11)
+Caller_L = Label(frame_mid_one,text='Caller:',fg='White', bg='#042440', font=11)
 Caller_L.grid(row=1,column=2, sticky="WE")
 Caller_T = Entry(frame_mid_one, width=25)
+Caller_T.configure(fg='White', bg='#133e63')
 Caller_T.grid(row=1,column=3, sticky="W")
 #Frame Mid Two----------------------------------------------------
 frame_mid_two.columnconfigure(0,weight=1)
@@ -649,9 +655,10 @@ frame_mid_two.columnconfigure(1,weight=1)
 frame_mid_two.columnconfigure(2,weight=1)
 frame_mid_two.columnconfigure(3,weight=1)
 #Email
-Email_L = Label(frame_mid_two,text='Email:',fg='White', bg='#1D0E32', font=11)
+Email_L = Label(frame_mid_two,text='Email:',fg='White', bg='#042440', font=11)
 Email_L.grid(row=2,column=0, sticky="E")
 Email_T = Entry(frame_mid_two, width=25)
+Email_T.configure(fg='White', bg='#133e63')
 Email_T.grid(row=2,column=1, sticky="W")
 #Frame Mid Three -------------------------------------------------
 frame_mid_three.columnconfigure(0,weight=1)
@@ -659,9 +666,10 @@ frame_mid_three.columnconfigure(1,weight=1)
 frame_mid_three.columnconfigure(2,weight=1)
 frame_mid_three.columnconfigure(3,weight=1)
 #Phone Number
-Phone_L = Label(frame_mid_two,text='Phone:',fg='White', bg='#1D0E32', font=11)
+Phone_L = Label(frame_mid_two,text='Phone:',fg='White', bg='#042440', font=11)
 Phone_L.grid(row=2,column=2, pady=10, sticky="W")
 Phone_T = Entry(frame_mid_two, width=25)
+Phone_T.configure(fg='White', bg='#133e63')
 Phone_T.grid(row=2,column=3, pady=10, sticky='W')
 #Frame Bottom -------------------------------------------------
 frame_bottom.columnconfigure(0,weight=1)
@@ -669,10 +677,11 @@ frame_bottom.columnconfigure(1,weight=1)
 frame_bottom.columnconfigure(2,weight=1)
 frame_bottom.columnconfigure(3,weight=1)
 #Completion Date Label ---------------------------------------
-completed_Date_L = Label(frame_bottom, text='Completion Date:', padx=15,fg='White', bg='#1D0E32', font=11)
+completed_Date_L = Label(frame_bottom, text='Completion Date:', padx=15,fg='White', bg='#042440', font=11)
 completed_Date_L.grid(row=4, column=1, pady=10, sticky='E')
 #Completed Date ----------------------------------------------
 completed_Date_input = Entry(frame_bottom, width=25)
+completed_Date_input.configure(fg='White', bg='#133e63')
 completed_Date_input.grid(row=4, column=2, sticky='W')
 #Frame Bottom One -------------------------------------------------
 frame_bottom_one.columnconfigure(0,weight=1)
@@ -680,7 +689,7 @@ frame_bottom_one.columnconfigure(1,weight=1)
 frame_bottom_one.columnconfigure(2,weight=1)
 frame_bottom_one.columnconfigure(3,weight=1)
 #Description Label
-Description_L = Label(frame_bottom_one,text='Request Description:', padx=15,fg='White', bg='#1D0E32', font=11)
+Description_L = Label(frame_bottom_one,text='Request Description:', padx=15,fg='White', bg='#042440', font=11)
 Description_L.grid(row=4,column=0, columnspan=0+4, pady=10)
 #Frame Bottom Two -------------------------------------------------
 frame_bottom_two.columnconfigure(0,weight=1)
@@ -689,6 +698,7 @@ frame_bottom_two.columnconfigure(2,weight=1)
 frame_bottom_two.columnconfigure(3,weight=1)
 #Description
 Description_T = Text(frame_bottom_two, wrap=WORD, height=16)
+Description_T.configure(fg='White', bg='#133e63')
 Description_T.grid(row=4,column=0, pady=10, padx=20)
 #Frame Bottom Threhree-------------------------------------------------
 frame_bottom_three.columnconfigure(0,weight=1)
