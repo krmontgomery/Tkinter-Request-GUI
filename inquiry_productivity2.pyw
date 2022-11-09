@@ -5,6 +5,7 @@ from tkinter import messagebox
 import os
 import pandas as pd
 from send_reminder_email import send_email
+from configparser import ConfigParser
 
 root = Tk()
 root.title('Request Manager')
@@ -64,6 +65,7 @@ def search_records():
         #Close connection
         conn.close()
     results_area = Text(newWindow, wrap=WORD)
+    results_area.configure(fg='White', bg='#133e63')
     results_area.grid(row=i,sticky='WENS')
     search_table = Button(newWindow, text='Search', command=select_all_records)
     search_table.grid(row=0, pady=10)

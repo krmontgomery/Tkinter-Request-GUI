@@ -3,7 +3,7 @@
 **/Request_Documentation
 **/__pycache__
 # Files
-send_reminder_email.py
+secure.py
 ms-outlook-task.py
 sensitive.config
 # Datasource
