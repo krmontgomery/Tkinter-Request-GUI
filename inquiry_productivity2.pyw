@@ -5,7 +5,6 @@ from tkinter import messagebox
 import os
 import pandas as pd
 from send_reminder_email import send_email
-from configparser import ConfigParser
 
 root = Tk()
 root.title('Request Manager')
