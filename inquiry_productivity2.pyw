@@ -455,7 +455,7 @@ def initialize_mr_app():
     b2.configure(bg='#d65454')
     b2.grid(row=7, column=3, pady=(0,10))
     #View Records
-    b3 = Button(window, text='View Records', command=view_command)
+    b3 = Button(window, text='View Records/Refresh', command=view_command)
     b3.grid(row=7, column=6, columnspan=2)
 
 
