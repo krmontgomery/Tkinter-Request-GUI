@@ -559,7 +559,8 @@ def insertIntoTable():
                 'Completed by Date': completed_Date_input.get(),
                 'Request Description':Description_T.get('1.0', END),
         }
-        send_email(requestEntryDictionary)
+        if send_email(requestEntryDictionary):
+            messagebox.showinfo('Send Email', 'Email reminder sent for Request Entry')
         #Clear fields
         #Service
         clicked_serv.set(service_options[0])

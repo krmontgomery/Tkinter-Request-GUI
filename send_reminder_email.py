@@ -62,6 +62,8 @@ def send_email(dict):
 
       # Send email here
       server.sendmail(sender_email, receiver_email, msg.as_string())
+    
+      return True
 
   except Exception as e:
       # Print any error messages to stdout
