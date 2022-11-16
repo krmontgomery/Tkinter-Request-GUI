@@ -423,6 +423,20 @@ def initialize_mr_app():
                             manage_request_Completion.get().strip(), request_description.get('1.0', END).strip(), selected_record[0]))
                 conn.commit()
                 conn.close()
+                #Send Email - Dictionary import to function
+                updateRequestEntryDict = {
+                        'Service': clicked_Service.get(),
+                        'Urgency': clicked_urgent.get(),
+                        'Request State': clicked_state.get(),
+                        'Name': manage_request_Name.get(),
+                        'Email': manage_request_Email.get(),
+                        'Phone': manage_request_Phone.get(),
+                        'Completed by Date': manage_request_Completion.get(),
+                        'Request Description': request_description.get('1.0', END),
+                        'Update': True
+                }
+                if send_email(updateRequestEntryDict):
+                    messagebox.showinfo('Send Email', 'Emailing Reminder for Updated Request Entry')
                 #Service Option Reset
                 clicked_Service.set(service_options[0])
                 #Urgency options reset
@@ -558,6 +572,7 @@ def insertIntoTable():
                 'Phone': Phone_T.get(),
                 'Completed by Date': completed_Date_input.get(),
                 'Request Description':Description_T.get('1.0', END),
+                'Update': False
         }
         if send_email(requestEntryDictionary):
             messagebox.showinfo('Send Email', 'Email reminder sent for Request Entry')

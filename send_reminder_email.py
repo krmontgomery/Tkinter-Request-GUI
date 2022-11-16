@@ -18,35 +18,64 @@ def send_email(dict):
   port = important_dictionary['port']
   today_date = date.today()
 
-  # initialise message instance
-  msg = MIMEMultipart()
-  msg["Subject"] = f"Request Reminder - {today_date}"
-  msg["From"] = sender_email
-  msg['To'] = receiver_email
-
-  html = f"""<html>
-                <body>
-                  <h1>Request Reminder</h1>
-                  <br>
-                  <br>
-                  <p>
-                    You have created a request for <b>{request_entry['Name'].strip()}<b>.
-                  </p>
-                  <br>
-                  <p>
-                  Additional Details:<br>
-                  Service: {request_entry['Service']}<br>
-                  Urgency: {request_entry['Urgency']}<br>
-                  Request State: {request_entry['Request State']}<br>
-                  Name: {request_entry['Name']}<br>
-                  Email: {request_entry['Email']}<br>
-                  Phone: {request_entry['Phone']}<br>
-                  Completed by Date: {request_entry['Completed by Date']}<br>
-                  Request Description: {request_entry['Request Description']}<br>
-                  </p>
-                </body>
-              </html>
-          """
+  if request_entry['Update'] == False:
+    # initialise message instance
+    msg = MIMEMultipart()
+    msg["Subject"] = f"New Request Reminder - {today_date}"
+    msg["From"] = sender_email
+    msg['To'] = receiver_email
+    html = f"""<html>
+                  <body>
+                    <h1>New Request Reminder</h1>
+                    <br>
+                    <br>
+                    <p>
+                      You have Created a Request for <b>{request_entry['Name'].strip()}<b>.
+                    </p>
+                    <br>
+                    <p>
+                    Additional Details:<br>
+                    Service: {request_entry['Service']}<br>
+                    Urgency: {request_entry['Urgency']}<br>
+                    Request State: {request_entry['Request State']}<br>
+                    Name: {request_entry['Name']}<br>
+                    Email: {request_entry['Email']}<br>
+                    Phone: {request_entry['Phone']}<br>
+                    Completed by Date: {request_entry['Completed by Date']}<br>
+                    Request Description: {request_entry['Request Description']}<br>
+                    </p>
+                  </body>
+                </html>
+            """
+  else:
+    # initialise message instance
+    msg = MIMEMultipart()
+    msg["Subject"] = f"Updated Request Reminder - {today_date}"
+    msg["From"] = sender_email
+    msg['To'] = receiver_email
+    html = f"""<html>
+                  <body>
+                    <h1>Update Request Reminder</h1>
+                    <br>
+                    <br>
+                    <p>
+                      You have Updated a Request for <b>{request_entry['Name'].strip()}<b>.
+                    </p>
+                    <br>
+                    <p>
+                    Additional Details:<br>
+                    Service: {request_entry['Service']}<br>
+                    Urgency: {request_entry['Urgency']}<br>
+                    Request State: {request_entry['Request State']}<br>
+                    Name: {request_entry['Name']}<br>
+                    Email: {request_entry['Email']}<br>
+                    Phone: {request_entry['Phone']}<br>
+                    Completed by Date: {request_entry['Completed by Date']}<br>
+                    Request Description: {request_entry['Request Description']}<br>
+                    </p>
+                  </body>
+                </html>
+            """  
 
   body_html = MIMEText(html, 'html')  # parse values into html text
   msg.attach(body_html)  # attaching the text body into msg
