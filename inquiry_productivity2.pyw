@@ -435,8 +435,11 @@ def initialize_mr_app():
                         'Request Description': request_description.get('1.0', END),
                         'Update': True
                 }
-                if send_email(updateRequestEntryDict):
-                    messagebox.showinfo('Send Email', 'Emailing Reminder for Updated Request Entry', parent=window)
+                if messagebox.askyesno('Send Email', 'Do you want to send an email for this Update Request Entry?', parent=window) == True:
+                    if send_email(updateRequestEntryDict):
+                        messagebox.showinfo('Send Email', 'Emailing Reminder for Updated Request Entry', parent=window)
+                else:
+                    messagebox.showinfo('Send Email', 'Update email was not sent!', parent=window)
                 #Service Option Reset
                 clicked_Service.set(service_options[0])
                 #Urgency options reset
@@ -574,8 +577,11 @@ def insertIntoTable():
                 'Request Description':Description_T.get('1.0', END),
                 'Update': False
         }
-        if send_email(requestEntryDictionary):
-            messagebox.showinfo('Send Email', 'Email reminder sent for Request Entry')
+        if messagebox.askyesno('Send Email', 'Do you want to send an email for this Request Entry?') == True:
+            if send_email(requestEntryDictionary):
+                messagebox.showinfo('Send Email', 'Email reminder sent for Request Entry!')
+        else:
+            messagebox.showinfo('Send Email', 'Email was not sent!')
         #Clear fields
         #Service
         clicked_serv.set(service_options[0])
