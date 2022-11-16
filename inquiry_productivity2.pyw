@@ -436,7 +436,7 @@ def initialize_mr_app():
                         'Update': True
                 }
                 if send_email(updateRequestEntryDict):
-                    messagebox.showinfo('Send Email', 'Emailing Reminder for Updated Request Entry')
+                    messagebox.showinfo('Send Email', 'Emailing Reminder for Updated Request Entry', parent=window)
                 #Service Option Reset
                 clicked_Service.set(service_options[0])
                 #Urgency options reset
@@ -457,7 +457,7 @@ def initialize_mr_app():
             except IndexError:
                 messagebox.showerror(title='Update Error', message="You don't have a record selected to update!", parent=window)
         else:
-            messagebox.showinfo(title='Update Record', message='Record was not updated.')
+            messagebox.showinfo(title='Update Record', message='Record was not updated.', parent=window)
 
     #Buttons
     #Update
