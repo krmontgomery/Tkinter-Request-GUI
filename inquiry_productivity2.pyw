@@ -2,6 +2,7 @@ from datetime import datetime, date
 import sqlite3
 from tkinter import *
 from tkinter import messagebox
+from tkcalendar import DateEntry
 import os
 import pandas as pd
 from send_reminder_email import send_email
@@ -252,11 +253,13 @@ def initialize_mr_app():
     #Completion Date
     manage_request_CompletionL = Label(window, text='Completion Date:')
     manage_request_CompletionL.configure(fg='White', bg='#042440', font=11)
-    manage_request_CompletionL.grid(row=3, column=1)
+    manage_request_CompletionL.grid(row=3, column=1, sticky='E')
 
-    mr_CompletionDate = StringVar()
-    manage_request_Completion = Entry(window, textvariable=mr_CompletionDate, fg='white', bg='#133e63', insertbackground="white")
-    manage_request_Completion.grid(row=3, column=2)
+    # mr_CompletionDate = StringVar()
+    # manage_request_Completion = Entry(window, textvariable=mr_CompletionDate, fg='white', bg='#133e63', insertbackground="white")
+    # manage_request_Completion.grid(row=3, column=2)
+    manage_request_Completion = DateEntry(window, selectmode='day',background='#133e63', foreground='white')
+    manage_request_Completion.grid(row=3, column=3, sticky='W')
     #Request Description
     request_descriptionL = Label(window, text='Request Description:')
     request_descriptionL.configure(fg='White', bg='#042440', font=11)
@@ -592,7 +595,6 @@ def insertIntoTable():
         Caller_T.delete(0, END)
         Email_T.delete(0, END)
         Phone_T.delete(0, END)
-        completed_Date_input.delete(0, END)
         Description_T.delete('1.0', END)
 
 #Frame Top 
@@ -667,7 +669,7 @@ State_OM.grid(
     sticky='W'
     )
 #Caller
-Caller_L = Label(frame_mid_one,text='Caller:',fg='White', bg='#042440', font=11)
+Caller_L = Label(frame_mid_one,text='Name:',fg='White', bg='#042440', font=11)
 Caller_L.grid(row=1,column=2, sticky="WE")
 Caller_T = Entry(frame_mid_one, width=25, insertbackground="white")
 Caller_T.configure(fg='White', bg='#133e63')
@@ -701,10 +703,9 @@ frame_bottom.columnconfigure(2,weight=1)
 frame_bottom.columnconfigure(3,weight=1)
 #Completion Date Label ---------------------------------------
 completed_Date_L = Label(frame_bottom, text='Completion Date:', padx=15,fg='White', bg='#042440', font=11)
-completed_Date_L.grid(row=4, column=1, pady=10, sticky='E')
+completed_Date_L.grid(row=4, column=1, pady=10,)
 #Completed Date ----------------------------------------------
-completed_Date_input = Entry(frame_bottom, width=25, insertbackground="white")
-completed_Date_input.configure(fg='White', bg='#133e63')
+completed_Date_input = DateEntry(frame_bottom, selectmode='day',background='#133e63', foreground='white')
 completed_Date_input.grid(row=4, column=2, sticky='W')
 #Frame Bottom One -------------------------------------------------
 frame_bottom_one.columnconfigure(0,weight=1)
@@ -733,7 +734,6 @@ def button_func():
     tblExistsIndicator = doesTableExist()
     if tblExistsIndicator == True:
         insertIntoTable()
-        # messagebox.showinfo("Message", "Table Exists!")
     else:
         messagebox.showinfo("Message", "Table didn't exist. Has been created.")
 #Action Button
