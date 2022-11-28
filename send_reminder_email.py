@@ -5,7 +5,7 @@ from email.mime.image import MIMEImage
 from email.mime.application import MIMEApplication
 import smtplib
 import ssl
-from secure import important_dictionary
+from service_Files.secure import important_dictionary
 
 
 def send_email(dict):
