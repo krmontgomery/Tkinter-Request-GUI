@@ -36,7 +36,7 @@ def send_email(dict):
                     <p>
                     Additional Details:<br>
                     Service: {request_entry['Service']}<br>
-                    Urgency: {request_entry['Urgency']}<br>
+                    Priority: {request_entry['Urgency']}<br>
                     Request State: {request_entry['Request State']}<br>
                     Name: {request_entry['Name']}<br>
                     Email: {request_entry['Email']}<br>
@@ -65,7 +65,7 @@ def send_email(dict):
                     <p>
                     Additional Details:<br>
                     Service: {request_entry['Service']}<br>
-                    Urgency: {request_entry['Urgency']}<br>
+                    Priority: {request_entry['Urgency']}<br>
                     Request State: {request_entry['Request State']}<br>
                     Name: {request_entry['Name']}<br>
                     Email: {request_entry['Email']}<br>

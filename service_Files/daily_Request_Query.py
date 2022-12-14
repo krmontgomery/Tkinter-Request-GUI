@@ -9,14 +9,15 @@ def startup_Request_Due_Date_Alert():
     todays_day = str(todays_date.day)
     todays_day2 = int(todays_date.day) + 2
     todays_date = f'{todays_month}/{str(todays_day2)}/{todays_year}'
+    # print(todays_date)
     conn = sqlite3.connect('request.db')
     c = conn.cursor()
+    # c.execute(f'''SELECT * FROM request_entry;''')
     c.execute(f'''SELECT * FROM request_entry 
-                    WHERE state <> 'Resolved'
+                    WHERE TRIM(state) <> 'Resolved'
                     AND SUBSTR(completed_date,1,2) = '{str(todays_month)}' 
                     AND SUBSTR(completed_date,7,2) = '{str(todays_year)}' 
                     AND SUBSTR(completed_date,4,2) <= '{str(todays_day2)}'
-                    AND SUBSTR(completed_date,4,2) >= '{todays_day}'
                     ORDER BY SUBSTR(completed_date,4,2);''')
     my_entries = c.fetchall()
     conn.commit()

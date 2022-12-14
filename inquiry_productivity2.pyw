@@ -9,8 +9,8 @@ from send_reminder_email import send_email
 
 root = Tk()
 root.title('Request Manager')
-w = 520
-h = 570
+w = 550
+h = 600
 ws = root.winfo_screenwidth()
 hs = root.winfo_screenheight()
 x = (ws/2) - (w/2)
@@ -179,16 +179,16 @@ def initialize_mr_app():
     clicked_Service = StringVar()
     clicked_Service.set('Police')
     manage_request_Service = OptionMenu(window, clicked_Service, *options)
-    manage_request_Service.configure(fg='White', bg='#105c9e', font=11, highlightthickness=0)
+    manage_request_Service.configure(fg='White', bg='#105c9e', font=8, highlightthickness=0)
     manage_request_Service.grid(
         row=0, 
         column=1,
-        pady=(10, 0),
+        pady=(10,5),
         sticky='W'
         )
     #Urgency Select
-    manage_request_UrgencyL = Label(window, text='Urgency:')
-    manage_request_UrgencyL.configure(fg='White', bg='#042440', font=11)
+    manage_request_UrgencyL = Label(window, text='Priority:', font=8)
+    manage_request_UrgencyL.configure(fg='White', bg='#042440')
     manage_request_UrgencyL.grid(row=0, column=2, pady=(10, 0), sticky='EW')
 
     urgency_options = [
@@ -200,12 +200,12 @@ def initialize_mr_app():
     clicked_urgent = StringVar()
     clicked_urgent.set(' Low')
     Urgency_OM = OptionMenu(window, clicked_urgent, *urgency_options)
-    Urgency_OM.configure(fg='White', bg='#105c9e', font=11, highlightthickness=0)
+    Urgency_OM.configure(fg='White', bg='#105c9e', font=8, highlightthickness=0)
     Urgency_OM.grid( 
         row=0,
         column=3,
         sticky='EW',
-        pady=(10, 0)
+        pady=(10,5)
         )
     #Request State
     manage_request_StateL = Label(window, text='State:')
@@ -224,7 +224,8 @@ def initialize_mr_app():
     manage_request_State.grid( 
         row=1,
         column=1,
-        sticky='W'
+        sticky='W',
+        pady=5
         )
     #Name
     manage_request_NameL = Label(window, text='Name:')
@@ -469,14 +470,14 @@ def initialize_mr_app():
     #Update
     b1 = Button(window, text='Update', width=12, command=update_command)
     b1.configure(bg='#00db84')
-    b1.grid(row=7, column=1, pady=(0,10))
+    b1.grid(row=7, column=1, pady=10)
     #Delete
     b2 = Button(window, text='Delete', width=12, command=delete_command)
     b2.configure(bg='#d65454')
-    b2.grid(row=7, column=3, pady=(0,10))
+    b2.grid(row=7, column=3, pady=10)
     #View Records
     b3 = Button(window, text='View Records/Refresh', command=view_command)
-    b3.grid(row=7, column=6, columnspan=2)
+    b3.grid(row=7, column=6, columnspan=2, pady=10)
 
 
     def manage_requests_view():
@@ -541,16 +542,17 @@ def insertIntoTable():
                         :Caller_T, :Email_T, :Phone_T, :Completed_Date,
                         :Description_T, :current_time) """,
                         {
-                            'Service_OM': clicked_serv.get(),
-                            'Urgency_OM': clicked_urg.get(),
-                            'State_OM': clicked_stat.get(),
-                            'Caller_T': Caller_T.get(),
-                            'Email_T': Email_T.get(),
-                            'Phone_T': Phone_T.get(),
+                            'Service_OM': clicked_serv.get().lstrip(),
+                            'Urgency_OM': clicked_urg.get().lstrip(),
+                            'State_OM': clicked_stat.get().lstrip(),
+                            'Caller_T': Caller_T.get().lstrip(),
+                            'Email_T': Email_T.get().lstrip(),
+                            'Phone_T': Phone_T.get().lstrip(),
                             'Completed_Date': completed_Date_input.get(),
-                            'Description_T':Description_T.get('1.0', END),
+                            'Description_T':Description_T.get('1.0', END).lstrip(),
                             'current_time': formatted_DateTime
                         })
+        print(completed_Date_input.get_date())
         #Commit Changes
         conn.commit()
         #Close connection
@@ -627,7 +629,7 @@ Service_OM.grid(
     sticky='W'
     )
 #Task
-Urgency_L = Label(frame_top,text="Urgency:",fg='White', bg='#042440', font=11)
+Urgency_L = Label(frame_top,text="Priority:",fg='White', bg='#042440', font=11)
 Urgency_L.grid(row=0,column=2, sticky='E')
 urgency_options = [
     ' Low',
