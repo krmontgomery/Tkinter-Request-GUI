@@ -22,8 +22,9 @@ def startup_Request_Due_Date_Alert():
     my_entries = c.fetchall()
     conn.commit()
     conn.close()
-    for f in my_entries:
-        print(f)
+    return my_entries
+    # for f in my_entries:
+    #     print(f)
 
-if __name__ == '__main__':
-    startup_Request_Due_Date_Alert()
+# if __name__ == '__main__':
+#     startup_Request_Due_Date_Alert()

@@ -6,6 +6,7 @@ from tkcalendar import DateEntry
 import os
 import pandas as pd
 from send_reminder_email import send_email
+from run_daily_job import run_daily_job_main
 
 root = Tk()
 root.title('Request Manager')
@@ -24,6 +25,9 @@ root.configure(bg='#042440')
 current_time = datetime.now()
 formatted_date = current_time.strftime("%d-%m-%Y")
 formatted_DateTime = current_time.strftime("%d-%m-%Y %H.%M")
+
+# Run Daily Job
+run_daily_job_main()
 
 def restart_command():
     root.destroy()

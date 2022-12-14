@@ -73,11 +73,79 @@ def send_email(dict):
                     Completed by Date: {request_entry['Completed by Date']}<br>
                     Request Description: {request_entry['Request Description']}<br>
                     </p>
+                    <br>
+                    <br>
+                    <p> Do NOT reply to this email.</p>
                   </body>
                 </html>
             """  
 
   body_html = MIMEText(html, 'html')  # parse values into html text
+  msg.attach(body_html)  # attaching the text body into msg
+
+  context = ssl.create_default_context()
+  # Try to log in to server and send email
+  try:
+      server = smtplib.SMTP(smtp_server, port)
+      server.ehlo()  # check connection
+      server.starttls(context=context)  # Secure the connection
+      server.ehlo()  # check connection
+      server.login(sender_email, password)
+
+      # Send email here
+      server.sendmail(sender_email, receiver_email, msg.as_string())
+    
+      return True
+
+  except Exception as e:
+      # Print any error messages to stdout
+      print(e)
+  finally:
+      server.quit()
+      
+def daily_request_check(list):
+  sender_email = important_dictionary['sender_email']
+  receiver_email = important_dictionary['receiver_email']
+  password = important_dictionary['password']
+  smtp_server = important_dictionary['smtp_server']
+  port = important_dictionary['port']
+  today_date = date.today()
+  my_record_list = list
+  
+    
+  msg = MIMEMultipart()
+  msg["Subject"] = f"Requests Nearing Completion - {today_date}"
+  msg["From"] = sender_email
+  msg['To'] = receiver_email
+  html_object = []
+  html_object.append("""<html>
+                      <body>
+                          <h1>Unresolved Requests Nearing Completion.</h1>
+                          <br>
+                          <br>
+                          <br>
+                          <p>""")
+  for record in my_record_list:
+      html_object.append(f"""
+                          <br>
+                          Additional Details:<br>
+                          Service: {record[1]}<br>
+                          Priority: {record[2]}<br>
+                          Request State: {record[3]}<br>
+                          Name: {record[4]}<br>
+                          Email: {record[5]}<br>
+                          Phone: {record[6]}<br>
+                          Completed by Date: {record[7]}<br>
+                          Request Description: {record[8]}
+                          <br>""")
+  html_object.append(f"""
+                    Do NOT reply to this email.
+                      </p>
+                  </body>
+              </html>
+      """)
+  full_html_string = "".join(html_object)
+  body_html = MIMEText(full_html_string, 'html')  # parse values into html text
   msg.attach(body_html)  # attaching the text body into msg
 
   context = ssl.create_default_context()
