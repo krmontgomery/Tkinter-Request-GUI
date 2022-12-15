@@ -5,12 +5,12 @@ from tkinter import messagebox
 from tkcalendar import DateEntry
 import os
 import pandas as pd
-from send_reminder_email import send_email
-from run_daily_job import run_daily_job_main
+from app_service_files.send_reminder_email import send_email
+from app_service_files.run_daily_job import run_daily_job_main
 
 root = Tk()
 root.title('Request Manager')
-w = 550
+w = 540
 h = 600
 ws = root.winfo_screenwidth()
 hs = root.winfo_screenheight()
@@ -649,6 +649,7 @@ Urgency_OM.grid(
     row=0,
     column=3,
     pady=10,
+    padx=15,
     sticky='W'
     )
 #Frame Mid One----------------------------------------------------
@@ -658,7 +659,7 @@ frame_mid_one.columnconfigure(2,weight=3)
 frame_mid_one.columnconfigure(3,weight=1)
 #State/Priority
 State_L = Label(frame_mid_one,text="State:",fg='White', bg='#042440', font=11)
-State_L.grid(row=1,column=0, sticky='E')
+State_L.grid(row=1, padx=(0,15), column=0, sticky='E')
 state_options = [
     ' New',
     ' In-Progress',
@@ -687,7 +688,7 @@ frame_mid_two.columnconfigure(2,weight=1)
 frame_mid_two.columnconfigure(3,weight=1)
 #Email
 Email_L = Label(frame_mid_two,text='Email:',fg='White', bg='#042440', font=11)
-Email_L.grid(row=2,column=0, sticky="E")
+Email_L.grid(row=2,column=0,padx=(0,15), sticky="E")
 Email_T = Entry(frame_mid_two, width=25, insertbackground="white")
 Email_T.configure(fg='White', bg='#133e63')
 Email_T.grid(row=2,column=1, sticky="W")

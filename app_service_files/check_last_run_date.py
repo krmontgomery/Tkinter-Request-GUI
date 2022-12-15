@@ -12,7 +12,7 @@ def main():
         return False
 
 def read_json():
-    with open('dailyRequestCheck.json', 'r') as rf:
+    with open('app_service_files/dailyRequestCheck.json', 'r') as rf:
         rd_json = json.load(rf)
         rf.close()
     return rd_json
@@ -21,7 +21,7 @@ def write_json(object):
     todays_date = datetime.today().strftime('%m/%d/%Y')
     json_object = object
     json_object['last_run_date'] = todays_date
-    with open('dailyRequestCheck.json','w') as wf:
+    with open('app_service_files/dailyRequestCheck.json','w') as wf:
         json.dump(json_object, wf)
         wf.close()
 

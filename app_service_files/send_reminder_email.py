@@ -5,7 +5,7 @@ from email.mime.image import MIMEImage
 from email.mime.application import MIMEApplication
 import smtplib
 import ssl
-from service_Files.secure import important_dictionary
+from app_service_files.secure import important_dictionary
 
 
 def send_email(dict):
@@ -30,11 +30,11 @@ def send_email(dict):
                     <br>
                     <br>
                     <p>
-                      You have Created a Request for <b>{request_entry['Name'].strip()}<b>.
+                      You have Created a Request for <b>{request_entry['Name'].strip()}</b>.
                     </p>
                     <br>
                     <p>
-                    Additional Details:<br>
+                    <b>Additional Details</b>:<br>
                     Service: {request_entry['Service']}<br>
                     Priority: {request_entry['Urgency']}<br>
                     Request State: {request_entry['Request State']}<br>
@@ -59,11 +59,11 @@ def send_email(dict):
                     <br>
                     <br>
                     <p>
-                      You have Updated a Request for <b>{request_entry['Name'].strip()}<b>.
+                      You have Updated a Request for <b>{request_entry['Name'].strip()}</b>.
                     </p>
                     <br>
                     <p>
-                    Additional Details:<br>
+                    <b>Additional Details</b>:<br>
                     Service: {request_entry['Service']}<br>
                     Priority: {request_entry['Urgency']}<br>
                     Request State: {request_entry['Request State']}<br>
@@ -123,12 +123,11 @@ def daily_request_check(list):
                           <h1>Unresolved Requests Nearing Completion.</h1>
                           <br>
                           <br>
-                          <br>
                           <p>""")
   for record in my_record_list:
       html_object.append(f"""
                           <br>
-                          Additional Details:<br>
+                          <b>Additional Details</b>:<br>
                           Service: {record[1]}<br>
                           Priority: {record[2]}<br>
                           Request State: {record[3]}<br>
@@ -139,6 +138,8 @@ def daily_request_check(list):
                           Request Description: {record[8]}
                           <br>""")
   html_object.append(f"""
+                    <br>
+                    <br>
                     Do NOT reply to this email.
                       </p>
                   </body>
