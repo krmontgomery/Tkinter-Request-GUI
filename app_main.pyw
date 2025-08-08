@@ -424,11 +424,10 @@ def initialize_mr_app():
                 selected_record = listbox_.get(index)
                 conn = sqlite3.connect('request.db')
                 c = conn.cursor()
-                c.execute('''UPDATE request_entry SET city_service=?, urgency=?, state=?,
-                            caller=?, email=?, phone=?, completed_date=?, description=? WHERE id=?''',
-                        (clicked_Service.get().strip(),clicked_urgent.get().strip(),clicked_state.get().strip(),
-                            manage_request_Name.get().strip(), manage_request_Email.get().strip(), manage_request_Phone.get().strip(), 
-                            manage_request_Completion.get().strip(), request_description.get('1.0', END).strip(), selected_record[0]))
+                c.execute('''UPDATE request_entry SET city_service=?, urgency=?, state=?, caller=?, email=?, phone=?, completed_date=?, description=? WHERE id=?''',
+                         (clicked_Service.get().strip(),clicked_urgent.get().strip(),clicked_state.get().strip(),
+                          manage_request_Name.get().strip(), manage_request_Email.get().strip(), manage_request_Phone.get().strip(), 
+                          manage_request_Completion.get().strip(), request_description.get('1.0', END).strip(), selected_record[0]))
                 conn.commit()
                 conn.close()
                 #Send Email - Dictionary import to function
